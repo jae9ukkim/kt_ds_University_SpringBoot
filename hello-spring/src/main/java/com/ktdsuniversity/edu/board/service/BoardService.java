@@ -1,6 +1,7 @@
 package com.ktdsuniversity.edu.board.service;
 
-import com.ktdsuniversity.edu.board.vo.SearchResultVO;
+import com.ktdsuniversity.edu.board.vo.request.WriteVO;
+import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
 
 /**
  * 인터페이스로 만드는 이유
@@ -16,5 +17,7 @@ import com.ktdsuniversity.edu.board.vo.SearchResultVO;
 public interface BoardService {
 
 	SearchResultVO findBoardAll();
+
+	boolean createNewBoard(WriteVO writeVO);
 
 }

@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.ktdsuniversity.edu.board.service.BoardService;
 import com.ktdsuniversity.edu.board.vo.BoardVO;
-import com.ktdsuniversity.edu.board.vo.SearchResultVO;
+import com.ktdsuniversity.edu.board.vo.request.WriteVO;
+import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
 
 @Controller
 public class BoardController {
@@ -45,8 +47,17 @@ public class BoardController {
 	}
 	
 	@PostMapping("/write")
-	public String doWriteAction() {
+	public String doWriteAction(WriteVO writeVO) {
+		System.out.println(writeVO.getSubject());
+		System.out.println(writeVO.getEmail());
+		System.out.println(writeVO.getContent());
 		
-		return null;
+		// create, update, delete => 성공/실패 여부 반환
+		boolean createResult =  this.boardService.createNewBoard(writeVO);
+		System.out.println("게시글 생성 성공? " + createResult);
+		
+		// redirect: 브라우저에게 다음 End Point를 요청하도록 지시
+		// redirect:/ ==> 브라우저에게 "/" End Point로 이동하도록 지시.
+		return "redirect:/";
 	}
 }
