@@ -1,0 +1,106 @@
+package org.themoviedb.movie.vo.request;
+
+public class WriteVO {
+
+    private String posterUrl;
+    private String title;
+    private String movieRating;
+    private String openDate;
+    private String openCountry;
+    private int runningTime;
+    private String introduce;
+    private String sysnopsis;
+    private String originalTitle;
+    private String state;
+    private String language;
+    private int budget;
+    private int profit;
+    
+    public String getPosterUrl() {
+        return this.posterUrl;
+    }
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
+    }
+    public String getTitle() {
+        return this.title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public String getMovieRating() {
+        return this.movieRating;
+    }
+    public void setMovieRating(String movieRating) {
+        this.movieRating = movieRating;
+    }
+    public String getOpenDate() {
+        return this.openDate;
+    }
+    public void setOpenDate(String openDate) {
+        this.openDate = openDate;
+    }
+    public String getOpenCountry() {
+        return this.openCountry;
+    }
+    public void setOpenCountry(String openCountry) {
+        this.openCountry = openCountry;
+    }
+    public int getRunningTime() {
+        return this.runningTime;
+    }
+    public void setRunningTime(int runningTime) {
+        this.runningTime = runningTime;
+    }
+    public String getIntroduce() {
+        return this.introduce;
+    }
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+    public String getSysnopsis() {
+        return this.sysnopsis;
+    }
+    public void setSysnopsis(String sysnopsis) {
+        this.sysnopsis = sysnopsis;
+    }
+    public String getOriginalTitle() {
+        return this.originalTitle;
+    }
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+    public String getState() {
+        return this.state;
+    }
+    public void setState(String state) {
+        this.state = state;
+    }
+    public String getLanguage() {
+        return this.language;
+    }
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+    public int getBudget() {
+        return this.budget;
+    }
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
+    public int getProfit() {
+        return this.profit;
+    }
+    public void setProfit(int profit) {
+        this.profit = profit;
+    }
+    @Override
+    public String toString() {
+        return "WriteVO [posterUrl=" + this.posterUrl + ", title=" + this.title + ", movieRating=" + this.movieRating
+                + ", openDate=" + this.openDate + ", openCountry=" + this.openCountry + ", runningTime="
+                + this.runningTime + ", introduce=" + this.introduce + ", sysnopsis=" + this.sysnopsis
+                + ", originalTitle=" + this.originalTitle + ", state=" + this.state + ", language=" + this.language
+                + ", budget=" + this.budget + ", profit=" + this.profit + "]";
+    }
+    
+}
