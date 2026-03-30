@@ -4,7 +4,7 @@ pageEncoding="UTF-8"%>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>게시글 조회: 게시글 아이디</title>
+    <title>게시글 조회: ${article.id}</title>
     <link rel="stylesheet" type="text/css" href="/css/hello-spring.css" />
   </head>
   <body>
@@ -32,10 +32,12 @@ pageEncoding="UTF-8"%>
       <div>${article.originFileName}</div>
 
       <span>내용</span>
-      <div>${article.content}</div>
+      <!-- <pre> ==> Presentation -->
+      <pre>${article.content}</pre>
 
       <div class="btn-group">
         <div class="right-align">
+            <a href="/update/${article.id}">수정</a>
             <a href="/delete?id=${article.id}">삭제</a>
         </div>
       </div>

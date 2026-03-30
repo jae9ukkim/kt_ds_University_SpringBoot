@@ -5,7 +5,7 @@
 <mapper namespace="com.ktdsuniversity.edu.members.dao.MembersDao">
 
 
-	<insert id="insertNewMember" parameterType="com.ktdsuniversity.edu.members.vo.request.MembersVO">
+	<insert id="insertNewMember" parameterType="com.ktdsuniversity.edu.members.vo.request.RegistVO">
 		INSERT INTO MEMBERS
 		( EMAIL
 		, NAME
@@ -16,4 +16,35 @@
 		, #{password})
 	</insert>
 
+    <select id="selectMemberByEmail" parameterType="string" resultType="com.ktdsuniversity.edu.members.vo.MembersVO">
+        SELECT EMAIL
+		     , NAME
+		     , PASSWORD
+		  FROM MEMBERS
+	     WHERE EMAIL = #{_parameter}
+    </select>
+    
+    <update id="updateMemberByEmail" parameterType="com.ktdsuniversity.edu.members.vo.request.UpdateVO">
+        UPDATE MEMBERS
+		   SET NAME = #{name}
+		     , PASSWORD = #{password}
+		 WHERE EMAIL = #{email}    
+    </update>
+    
+    <delete id="deleteMemberByEmail" parameterType="string">
+        DELETE FROM MEMBERS
+         WHERE EMAIL = #{_parameter}
+    </delete>
+    
+    <select id="selectMembersCount" resultType="_int">
+        SELECT COUNT(EMAIL)
+		  FROM MEMBERS
+    </select>
+    
+    <select id="selectMembersList" resultType="com.ktdsuniversity.edu.members.vo.MembersVO">
+        SELECT EMAIL
+		     , NAME
+		     , PASSWORD
+		  FROM MEMBERS
+    </select>
 </mapper>

@@ -1,10 +1,15 @@
 package com.ktdsuniversity.edu.members.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ktdsuniversity.edu.members.dao.MembersDao;
-import com.ktdsuniversity.edu.members.vo.request.MembersVO;
+import com.ktdsuniversity.edu.members.vo.MembersVO;
+import com.ktdsuniversity.edu.members.vo.request.RegistVO;
+import com.ktdsuniversity.edu.members.vo.request.UpdateVO;
+import com.ktdsuniversity.edu.members.vo.response.SearchResultVO;
 
 @Service
 public class MembersServiceImpl implements MembersService {
@@ -13,12 +18,47 @@ public class MembersServiceImpl implements MembersService {
 	private MembersDao membersDao;
 	
 	@Override
-	public boolean createNewMember(MembersVO membersVO) {
+	public boolean createNewMember(RegistVO registVO) {
 		
-		int insertCount = membersDao.insertNewMember(membersVO);
+		int insertCount = membersDao.insertNewMember(registVO);
 		System.out.println("생성된 계정의 개수? " + insertCount);
 		
 		return insertCount == 1;
+	}
+
+	@Override
+	public MembersVO findMemberByEmail(String email) {
+		return this.membersDao.selectMemberByEmail(email);
+	}
+
+	@Override
+	public boolean updateMemberByEmail(UpdateVO updateVO) {
+		int updateCount = this.membersDao.updateMemberByEmail(updateVO);
+		return updateCount == 1;
+	}
+
+	@Override
+	public boolean deleteMemberByEmail(String email) {
+		int deleteCount = this.membersDao.deleteMemberByEmail(email);
+		return deleteCount == 1;
+	}
+
+	@Override
+	public SearchResultVO findMembersAll() {
+		
+		SearchResultVO searchResult = new SearchResultVO();
+		
+		int count = this.membersDao.selectMembersCount();
+		searchResult.setCount(count);
+		
+		if(count == 0) {
+			return searchResult;
+		}
+		
+		List<MembersVO> list = this.membersDao.selectMembersList();
+		searchResult.setMembersVO(list);
+		
+		return searchResult;
 	}
 
 }

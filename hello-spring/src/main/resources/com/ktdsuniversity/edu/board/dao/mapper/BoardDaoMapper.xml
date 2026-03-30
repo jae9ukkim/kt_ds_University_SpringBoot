@@ -73,4 +73,13 @@
          WHERE ID = #{_parameter} 
     </delete>
     
+    <update id="updateBoardById" parameterType="com.ktdsuniversity.edu.board.vo.request.UpdateVO">
+        UPDATE BOARD
+		   SET SUBJECT = #{subject}
+		     , CONTENT = #{content}
+		     , EMAIL = #{email} 
+		     , MDFY_DT = SYSDATE
+		 WHERE ID = #{id}
+    </update>
+    
 </mapper>
