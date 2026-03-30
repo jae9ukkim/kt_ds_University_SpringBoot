@@ -40,12 +40,10 @@ public class MovieController {
 // 영화 등록 처리 엔드포인트 생성 ( /write ) - 영화 등록 처리 (insert 수행)
     @PostMapping("/write")
     public String doWriteAction(WriteVO writeVO) {
-        System.out.println(writeVO);
         
+      boolean createResult = this.movieService.createNewMovie(writeVO);
         
-//      boolean createResult = this.movieService.createNewMovie(writeVO);
-        
-        return "redirect:/list";
+      return "redirect:/list";
     }
     
     @GetMapping("/view/{movieId}")
@@ -57,8 +55,11 @@ public class MovieController {
     	return "movie/view";
     }
     
-    @GetMapping("/update")
-    public String viewUpdatePage() {
+    @GetMapping("/update/{movieId}")
+    public String viewUpdatePage(@PathVariable String movieId, Model model) {
+        MovieVO movieVO = this.movieService.findMovieDtailByMovieId(movieId);
+        model.addAttribute("movie", movieVO);
+        
     	return "movie/update";
     }
     
@@ -69,7 +70,7 @@ public class MovieController {
     	boolean updateResult = this.movieService.updateMovieByMovieId(updateVO);
     	System.out.println("update 성공: " + updateResult);
     	
-    	return "movie/view/"+movieId;
+    	return "redirect:/view/"+movieId;
     }
     
     @GetMapping("/delete")
@@ -78,6 +79,6 @@ public class MovieController {
     	Boolean deleteResult = this.movieService.deleteMovieByMovieId(movieId);
     	System.out.println("delete 성공: " + deleteResult);
     	
-    	return "/list";
+    	return "redirect:/list";
     }
 }

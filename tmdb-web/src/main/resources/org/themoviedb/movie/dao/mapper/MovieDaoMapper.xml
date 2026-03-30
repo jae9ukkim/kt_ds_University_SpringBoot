@@ -48,14 +48,14 @@
 		, #{posterUrl}
 		, #{title}
 		, #{movieRating}
-		, #{openDate}
+		, TO_DATE(#{openDate}, 'YYYY-MM-DD')
 		, #{openCountry}
 		, #{runningTime}
 		, #{introduce}
 		, #{sysnopsis}
 		, #{originalTitle}
 		, #{state}
-		, #{languagel}
+		, #{language}
 		, #{budget}
 		, #{profit})
     </insert>

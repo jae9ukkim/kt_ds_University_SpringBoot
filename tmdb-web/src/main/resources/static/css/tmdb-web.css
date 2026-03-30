@@ -8,10 +8,60 @@ div.grid {
   display: grid;
 }
 
+div.grid > input[type="submit"] {
+  grid-column: 1/-1;
+  width: 6.25rem;
+  margin-left: auto;
+}
+
+div.flex {
+  display: flex;
+}
+
+.hide {
+  display: none;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.align-right {
+  text-align: right;
+}
+
+th,
+td {
+  padding: 5px;
+}
+
+table a {
+  text-decoration: none;
+}
+
+/* list style 시작 */
+table img {
+  width: 6.25rem;
+}
+/* list style 끝 */
+
+/* view style 시작 */
+div.view {
+  grid-template-columns: auto minMax(auto, 50rem);
+  column-gap: 1.25rem;
+  justify-content: start;
+}
+
+div.view > div.flex {
+  flex-direction: column;
+  row-gap: 1.25rem;
+}
+/* view style 끝 */
+
 /* write style 시작 */
 div.write {
-  grid-template-columns: 6.25rem 12.5rem;
-  grid-template-rows: repeat(13, 1.25rem);
+  grid-template-columns: 6.25rem 25rem;
+  grid-template-rows: repeat(11, 1.25rem) repeat(2, 12.5rem);
   row-gap: 0.125rem;
 }
 
@@ -20,3 +70,16 @@ div.write > label {
   padding-right: 0.25rem;
 }
 /* write style 끝 */
+
+/* update style 시작 */
+div.update {
+  grid-template-columns: 6.25rem 25rem;
+  grid-template-rows: repeat(11, 1.25rem) repeat(2, 12.5rem);
+  row-gap: 0.125rem;
+}
+
+div.update > label {
+  text-align: right;
+  padding-right: 0.25rem;
+}
+/* update style 끝 */
