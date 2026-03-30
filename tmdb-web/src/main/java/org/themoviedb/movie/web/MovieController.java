@@ -1,13 +1,15 @@
 package org.themoviedb.movie.web;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.themoviedb.movie.service.MovieService;
+import org.themoviedb.movie.vo.MovieVO;
+import org.themoviedb.movie.vo.request.UpdateVO;
 import org.themoviedb.movie.vo.request.WriteVO;
 import org.themoviedb.movie.vo.response.SearchResultVO;
 
@@ -44,5 +46,38 @@ public class MovieController {
 //      boolean createResult = this.movieService.createNewMovie(writeVO);
         
         return "redirect:/list";
+    }
+    
+    @GetMapping("/view/{movieId}")
+    public String viewMovieDetailPage(@PathVariable String movieId, Model model) {
+    	
+    	MovieVO movieVO = this.movieService.findMovieDtailByMovieId(movieId);
+    	model.addAttribute("movie", movieVO);
+    	
+    	return "movie/view";
+    }
+    
+    @GetMapping("/update")
+    public String viewUpdatePage() {
+    	return "movie/update";
+    }
+    
+    @PostMapping("/update/{movieId}")
+    public String doUpdateAction(@PathVariable String movieId, UpdateVO updateVO) {
+    	
+    	updateVO.setMovieId(movieId);
+    	boolean updateResult = this.movieService.updateMovieByMovieId(updateVO);
+    	System.out.println("update 성공: " + updateResult);
+    	
+    	return "movie/view/"+movieId;
+    }
+    
+    @GetMapping("/delete")
+    public String doDeleteAction(@RequestParam String movieId) {
+    	
+    	Boolean deleteResult = this.movieService.deleteMovieByMovieId(movieId);
+    	System.out.println("delete 성공: " + deleteResult);
+    	
+    	return "/list";
     }
 }

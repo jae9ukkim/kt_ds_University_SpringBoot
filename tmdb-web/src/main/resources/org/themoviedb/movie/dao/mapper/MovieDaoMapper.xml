@@ -60,4 +60,45 @@
 		, #{profit})
     </insert>
 
+    <select id="selectMovieByMovieId" parameterType="string" resultType="org.themoviedb.movie.vo.MovieVO">
+        SELECT MOVIE_ID
+             , POSTER_URL
+             , TITLE
+             , MOVIE_RATING
+             , TO_CHAR(OPEN_DATE, 'YYYY-MM-DD') AS OPEN_DATE
+             , OPEN_COUNTRY
+             , RUNNING_TIME
+             , INTRODUCE
+             , SYSNOPSIS
+             , ORIGINAL_TITLE
+             , STATE
+             , LANGUAGE
+             , BUDGET
+             , PROFIT 
+          FROM MOVIE
+         WHERE MOVIE_ID = #{_parameter} 
+    </select>
+    
+    <update id="updateMovieByMovieId" parameterType="org.themoviedb.movie.vo.request.UpdateVO">
+        UPDATE MOVIE
+		   SET POSTER_URL = #{posterUrl}
+		     , TITLE = #{title}
+		     , MOVIE_RATING = #{movieRating}
+		     , OPEN_DATE = #{openDate}
+		     , OPEN_COUNTRY = #{openCountry}
+		     , RUNNING_TIME = #{runningTime}
+		     , INTRODUCE = #{introduce}
+		     , SYSNOPSIS = #{sysnopsis}
+		     , ORIGINAL_TITLE = #{originalTitle}
+		     , STATE = #{state}
+		     , "LANGUAGE" = #{language}
+		     , BUDGET = #{budget}
+		     , PROFIT = #{profit}
+		WHERE MOVIE_ID = #{movieId}
+    </update>
+    
+    <delete id="deleteMovieByMovieId" parameterType="string">
+        DELETE FROM MOVIE
+         WHERE MOVIE_ID = #{_parameter}
+    </delete>
 </mapper>

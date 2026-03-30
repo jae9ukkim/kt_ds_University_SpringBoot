@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.themoviedb.movie.dao.MovieDao;
 import org.themoviedb.movie.vo.MovieVO;
+import org.themoviedb.movie.vo.request.UpdateVO;
 import org.themoviedb.movie.vo.request.WriteVO;
 import org.themoviedb.movie.vo.response.SearchResultVO;
 
@@ -38,5 +39,27 @@ public class MovieServiceImpl implements MovieService {
         int insertCount =  this.movieDao.insertNewMovie(writeVO);
         return insertCount == 1;
     }
+
+	@Override
+	public MovieVO findMovieDtailByMovieId(String movieId) {
+
+		MovieVO movie = this.movieDao.selectMovieByMovieId(movieId);
+		
+		return movie;
+	}
+
+	@Override
+	public boolean updateMovieByMovieId(UpdateVO updateVO) {
+		int updateCount = this.movieDao.updateMovieByMovieId(updateVO);
+		return updateCount == 1;
+	}
+
+	@Override
+	public Boolean deleteMovieByMovieId(String movieId) {
+		
+		int deleteCount = this.movieDao.deleteMovieByMovieId(movieId);
+		
+		return deleteCount == 1;
+	}
 
 }
