@@ -107,6 +107,12 @@ div.list > table.grid > tbody > tr > td:nth-child(2) {
 
 /* 글 목록 style 끝 */
 
+div.update {
+  grid-template-columns: 5rem 1fr;
+  grid-template-rows: 1.75rem 1.75rem minmax(1.75rem, auto) 1fr;
+  row-gap: 0.625rem;
+}
+
 /* 글쓰기 style 시작 */
 div.write {
   grid-template-columns: 5rem 1fr;
@@ -114,10 +120,25 @@ div.write {
   row-gap: 0.625rem;
 }
 
+div.update > div.attach-files,
 div.write > div.attach-files {
   display: grid;
   grid-template-columns: 1fr minmax(80px, auto);
   gap: 0.625rem;
+}
+
+div.update > div.attach-files > ul.vertical-list {
+  grid-column: 1/-1;
+}
+
+div.update
+  > div.attach-files
+  > ul.vertical-list
+  > li
+  > input[type="checkbox"]:checked
+  + a {
+  color: #f00;
+  text-decoration: line-through;
 }
 /* 글쓰기 style 끝 */
 

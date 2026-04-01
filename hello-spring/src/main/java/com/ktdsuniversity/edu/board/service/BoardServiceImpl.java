@@ -1,7 +1,6 @@
 package com.ktdsuniversity.edu.board.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import com.ktdsuniversity.edu.board.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.board.vo.request.WriteVO;
 import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
 import com.ktdsuniversity.edu.files.dao.FilesDao;
-import com.ktdsuniversity.edu.files.vo.request.UploadVO;
+import com.ktdsuniversity.edu.files.helpers.MultipartFileHandler;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -25,9 +24,12 @@ public class BoardServiceImpl implements BoardService {
 	 */
 	@Autowired
 	private BoardDao boardDao;
-
+	
 	@Autowired
-	private FilesDao filesDao;
+	private MultipartFileHandler multipartFileHandler;
+	
+	@Autowired
+	FilesDao filesDao;
 
 	@Override
 	public SearchResultVO findBoardAll() {
@@ -42,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		// 게시 목록 조회
-		List<BoardVO> list = this.boardDao.selectBoardList();		
+		List<BoardVO> list = this.boardDao.selectBoardList();
 		result.setResult(list);
 		
 		return result;
@@ -61,42 +63,7 @@ public class BoardServiceImpl implements BoardService {
 		
 		// 첨부파일 업로드
 		List<MultipartFile> attachFiles = writeVO.getAttachFile();
-		if(attachFiles != null && attachFiles.size() > 0) {
-			for(int i=0; i < attachFiles.size(); i++) {
-				// 업로드한 파일이 서버컴퓨터의 파일 시스템에 저장되도록 한다.
-				File storeFile = new File("C:\\uploadFiles", attachFiles.get(i).getOriginalFilename());
-				// C:\\uploadFiles 폴더가 없으면 생성해라!
-				if(!storeFile.getParentFile().exists()) {
-					storeFile.getParentFile().mkdirs();
-				}
-				
-				try {
-					attachFiles.get(i).transferTo(storeFile);
-					UploadVO uploadVO = new UploadVO();
-
-					String filename = attachFiles.get(i).getOriginalFilename();
-					String ext = filename.substring(filename.lastIndexOf(".") + 1);
-
-					uploadVO.setFileNum(i + 1);
-					// 새롭게 등록이 되는 게시글의 아이디를 지금은 알 수 없다.
-					uploadVO.setFileGroupId(writeVO.getId()); 
-					uploadVO.setObfuscateName(attachFiles.get(i).getOriginalFilename());
-					uploadVO.setDisplayName(attachFiles.get(i).getOriginalFilename());
-					uploadVO.setExtendName(ext);
-					// 실제 경로의 파일의 크기
-					uploadVO.setFileLength(storeFile.length());
-					// 절대경로
-					uploadVO.setFilePath(storeFile.getAbsolutePath());
-
-					this.filesDao.insertAttachFile(uploadVO);
-				} catch (IllegalStateException | IOException e) {
-					e.printStackTrace();
-				}
-				
-			}
-		}
-		
-		// FILES 테이블에 첨부파일 데이터를 INSERT
+		this.multipartFileHandler.upload(attachFiles, writeVO.getId());
 		
 		return insertCount == 1;
 	}
@@ -128,12 +95,44 @@ public class BoardServiceImpl implements BoardService {
 	public boolean deleteBoardById(String id) {
 		int deleteCount = this.boardDao.deleteBoardById(id);
 		
+		// 삭제하려는 게시글에 첨부된 파일 목록을 가져온다.
+		List<String> deleteTargets = this.filesDao.selectFilePathByFileGroupId(id);
+		
+		// 파일 목록이 존재하면, 모든 파일들을 제거한다.
+		if(deleteTargets != null && deleteTargets.size() > 0) {
+			for (String target : deleteTargets) {
+				new File(target).delete();
+			}
+		}
+		
+		// 파일 목록을 제거한 이후에 "FILES" 테이블에서 해당 파일 정보를 모두 삭제한다.
+		int deleteFileCount = this.filesDao.deleteFilesByFileGroupId(id);
+		System.out.println("삭제한 파일 데이터의 수: " + deleteFileCount);
+		
 		return deleteCount == 1;
 	}
 
 	@Override
 	public boolean updateBoardByArticleId(UpdateVO updateVO) {
 		int updateCount = this.boardDao.updateBoardById(updateVO);
+		
+		// 선택한 파일들만 삭제
+		if(updateVO.getDeleteFileNum() != null && updateVO.getDeleteFileNum().size() > 0) {
+			// 선택한 파일들의 정보를 조회 --> 파일의 경로 --> 실제 파일을 제거
+			List<String> deleteTargets = this.filesDao.selectFilePathByFileGroupIdAndFileNums(updateVO);
+			// 선택한 파일들을 FILES 테이블에서 제거
+			for (String target: deleteTargets) {
+				new File(target).delete();
+			}
+			// 선택한 파일들을 FILES 테이블에서 제거
+			int deleteCount = this.filesDao.deleteFilesByFileGroupIdAndFileNums(updateVO);
+			System.out.println("삭제한 파일 데이터의 수: " + deleteCount);
+		}
+		
+		// 업로드 파일 list 가져오기
+		List<MultipartFile> attachFiles = updateVO.getAttachFile();
+		this.multipartFileHandler.upload(attachFiles, updateVO.getId());
+		
 		return updateCount == 1;
 	}
 

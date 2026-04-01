@@ -14,7 +14,9 @@
 			, FILE_LENGTH
 			, FILE_PATH)
 			VALUES
-			( #{fileNum}
+			( (SELECT NVL(MAX(FILE_NUM), 0) + 1
+                 FROM FILES
+                WHERE FILE_GROUP_ID = #{fileGroupId})
 			, #{fileGroupId}
 			, #{obfuscateName}
 			, #{displayName}
@@ -23,5 +25,46 @@
 			, #{filePath})
         </insert>
         
+        <select id="selectFilesByGroupIdAndFileNum" parameterType="com.ktdsuniversity.edu.files.vo.request.SearchFileVO" resultType="com.ktdsuniversity.edu.files.vo.response.DownloadVO">
+            SELECT DISPLAY_NAME
+			     , EXTEND_NAME
+			     , FILE_LENGTH
+			     , FILE_PATH
+			  FROM FILES 
+			 WHERE FILE_GROUP_ID = #{fileGroupId}
+			   AND FILE_NUM = #{fileNum}
+        </select>
+
+        <select id="selectFilePathByFileGroupId" resultType="string" parameterType="string">
+	        SELECT FILE_PATH
+			  FROM FILES 
+			 WHERE FILE_GROUP_ID = #{id}
+		</select>
+		
+        <select id="selectFilePathByFileGroupIdAndFileNums" resultType="string" parameterType="com.ktdsuniversity.edu.board.vo.request.UpdateVO">
+	        SELECT FILE_PATH
+			  FROM FILES 
+			 WHERE FILE_GROUP_ID = #{id}
+			   AND FILE_NUM IN
+			   <foreach collection="deleteFileNum" item="fileNum" open="(" close=")" separator=",">
+			   #{fileNum} 
+			   </foreach>
+		</select>
+        
+        <delete id="deleteFilesByFileGroupId" parameterType="string">
+            DELETE 
+              FROM FILES 
+             WHERE FILE_GROUP_ID = #{id}
+        </delete>
+        
+        <delete id="deleteFilesByFileGroupIdAndFileNums" parameterType="com.ktdsuniversity.edu.board.vo.request.UpdateVO">
+            DELETE 
+              FROM FILES 
+             WHERE FILE_GROUP_ID = #{id}
+               AND FILE_NUM IN
+               <foreach collection="deleteFileNum" item="fileNum" open="(" close=")" separator=",">
+               #{fileNum} 
+               </foreach> 
+        </delete>
     </mapper>
     
