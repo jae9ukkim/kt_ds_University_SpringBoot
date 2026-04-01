@@ -9,12 +9,14 @@ pageEncoding="UTF-8"%>
   </head>
   <body>
     <h1>영화 등록</h1>
-    <form action="/write" method="post">
+    <form action="/write" method="post" enctype="multipart/form-data">
       <div class="grid write">
         <label for="posterUrl">포스터 URL : </label>
         <input type="url" name="posterUrl" id="posterUrl" />
         <label for="title">제목 : </label>
         <input type="text" name="title" id="title" />
+        <label for="posterFiles">포스터 파일 : </label>
+        <input type="file" name="posterFiles" id="posterFiles" />
         <label for="movieRating">관람등급 : </label>
         <input type="text" name="movieRating" id="movieRating" />
         <label for="openDate">개봉일 : </label>

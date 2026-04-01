@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.themoviedb.files.helpers.MultipartFileHandler;
 import org.themoviedb.movie.dao.MovieDao;
 import org.themoviedb.movie.vo.MovieVO;
 import org.themoviedb.movie.vo.request.UpdateVO;
@@ -15,6 +16,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private MovieDao movieDao;
+    
+    @Autowired
+    private MultipartFileHandler multipartFileHandler;
     
     @Override
     public SearchResultVO findMovieAll() {
@@ -37,6 +41,9 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public boolean createNewMovie(WriteVO writeVO) {
         int insertCount =  this.movieDao.insertNewMovie(writeVO);
+        // 파일 업로드
+        this.multipartFileHandler.upload(writeVO.getPosterFiles(), writeVO.getMovieId());
+        
         return insertCount == 1;
     }
 

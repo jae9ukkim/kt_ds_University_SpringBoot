@@ -28,6 +28,10 @@
     </select>
 
     <insert id="insertNewMovie" parameterType="org.themoviedb.movie.vo.request.WriteVO" >
+        <selectKey order="BEFORE" resultType="string" keyProperty="movieId">
+            SELECT 'MV-' || TO_CHAR(SYSDATE, 'YYYYMMDD-') || LPAD(SEQ_MOVIE_PK.NEXTVAL, 6, '0')
+              FROM DUAL 
+        </selectKey>
 	    INSERT INTO MOVIE
 		( MOVIE_ID
 		, POSTER_URL
@@ -44,7 +48,7 @@
 		, BUDGET
 		, PROFIT)
 		VALUES
-		( 'MV-' || TO_CHAR(SYSDATE, 'YYYYMMDD-') || LPAD(SEQ_MOVIE_PK.NEXTVAL, 6, '0')
+		( #{movieId}
 		, #{posterUrl}
 		, #{title}
 		, #{movieRating}
@@ -60,22 +64,39 @@
 		, #{profit})
     </insert>
 
-    <select id="selectMovieByMovieId" parameterType="string" resultType="org.themoviedb.movie.vo.MovieVO">
-        SELECT MOVIE_ID
-             , POSTER_URL
-             , TITLE
-             , MOVIE_RATING
-             , TO_CHAR(OPEN_DATE, 'YYYY-MM-DD') AS OPEN_DATE
-             , OPEN_COUNTRY
-             , RUNNING_TIME
-             , INTRODUCE
-             , SYSNOPSIS
-             , ORIGINAL_TITLE
-             , STATE
-             , LANGUAGE
-             , BUDGET
-             , PROFIT 
-          FROM MOVIE
+    <resultMap type="org.themoviedb.movie.vo.MovieVO" id="MovieVOMap" autoMapping="true">
+        <id column="MOVIE_ID" property="movieId"/>
+        <collection property="files" javaType="list" ofType="org.themoviedb.files.vo.FilesVO" autoMapping="true">
+            <id column="FILE_GROUP_ID" property="fileGroupId"/>
+            <id column="FILE_NUM" property="fileNum"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectMovieByMovieId" parameterType="string" resultMap="MovieVOMap">
+        SELECT M.MOVIE_ID
+             , M.POSTER_URL
+             , M.TITLE
+             , M.MOVIE_RATING
+             , TO_CHAR(M.OPEN_DATE, 'YYYY-MM-DD') AS OPEN_DATE
+             , M.OPEN_COUNTRY
+             , M.RUNNING_TIME
+             , M.INTRODUCE
+             , M.SYSNOPSIS
+             , M.ORIGINAL_TITLE
+             , M.STATE
+             , M.LANGUAGE
+             , M.BUDGET
+             , M.PROFIT
+             , F.FILE_NUM
+			 , F.FILE_GROUP_ID
+			 , F.OBFUSCATE_NAME
+			 , F.DISPLAY_NAME
+			 , F.EXTEND_NAME
+			 , F.FILE_LENGTH
+			 , F.FILE_PATH 
+          FROM MOVIE M
+          LEFT JOIN FILES F
+            ON M.MOVIE_ID = F.FILE_GROUP_ID
          WHERE MOVIE_ID = #{_parameter} 
     </select>
     

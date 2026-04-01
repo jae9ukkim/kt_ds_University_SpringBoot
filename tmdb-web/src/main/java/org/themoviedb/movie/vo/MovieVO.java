@@ -1,5 +1,9 @@
 package org.themoviedb.movie.vo;
 
+import java.util.List;
+
+import org.themoviedb.files.vo.FilesVO;
+
 public class MovieVO {
 
     private String movieId;
@@ -14,8 +18,10 @@ public class MovieVO {
     private String originalTitle;
     private String state;
     private String language;
-    private int budget;
-    private int profit;
+    private long budget;
+    private long profit;
+    
+    private List<FilesVO> files;
     
     public String getMovieId() {
         return this.movieId;
@@ -89,18 +95,25 @@ public class MovieVO {
     public void setLanguage(String language) {
         this.language = language;
     }
-    public int getBudget() {
+    public long getBudget() {
         return this.budget;
     }
-    public void setBudget(int budget) {
+    public void setBudget(long budget) {
         this.budget = budget;
     }
-    public int getProfit() {
+    public long getProfit() {
         return this.profit;
     }
-    public void setProfit(int profit) {
+    public void setProfit(long profit) {
         this.profit = profit;
     }
+    public List<FilesVO> getFiles() {
+        return this.files;
+    }
+    public void setFiles(List<FilesVO> files) {
+        this.files = files;
+    }
+    
     
     
 }

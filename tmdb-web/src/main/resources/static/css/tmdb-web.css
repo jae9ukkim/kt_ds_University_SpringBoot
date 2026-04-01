@@ -61,7 +61,7 @@ div.view > div.flex {
 /* write style 시작 */
 div.write {
   grid-template-columns: 6.25rem 25rem;
-  grid-template-rows: repeat(11, 1.25rem) repeat(2, 12.5rem);
+  grid-template-rows: repeat(12, 1.6rem) repeat(2, 12.5rem);
   row-gap: 0.125rem;
 }
 

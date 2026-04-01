@@ -1,7 +1,13 @@
 package org.themoviedb.movie.vo.request;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 public class WriteVO {
 
+    private String movieId;
+    
     private String posterUrl;
     private String title;
     private String movieRating;
@@ -16,6 +22,14 @@ public class WriteVO {
     private int budget;
     private int profit;
     
+    private List<MultipartFile> posterFiles;
+    
+    public String getMovieId() {
+        return this.movieId;
+    }
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
     public String getPosterUrl() {
         return this.posterUrl;
     }
@@ -94,13 +108,11 @@ public class WriteVO {
     public void setProfit(int profit) {
         this.profit = profit;
     }
-    @Override
-    public String toString() {
-        return "WriteVO [posterUrl=" + this.posterUrl + ", title=" + this.title + ", movieRating=" + this.movieRating
-                + ", openDate=" + this.openDate + ", openCountry=" + this.openCountry + ", runningTime="
-                + this.runningTime + ", introduce=" + this.introduce + ", sysnopsis=" + this.sysnopsis
-                + ", originalTitle=" + this.originalTitle + ", state=" + this.state + ", language=" + this.language
-                + ", budget=" + this.budget + ", profit=" + this.profit + "]";
+    public List<MultipartFile> getPosterFiles() {
+        return this.posterFiles;
     }
-    
+    public void setPosterFiles(List<MultipartFile> posterFiles) {
+        this.posterFiles = posterFiles;
+    }
+
 }

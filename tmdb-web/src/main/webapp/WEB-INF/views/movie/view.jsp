@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="grid view">
-        <div><img src="${movie.posterUrl}" alt=""> </div>
+        <div><img src="/file/${movie.files[0].fileGroupId}/${movie.files[0].fileNum}" alt=""> </div>
         <div class="flex">
             <div>제목 : ${movie.title}</div>
             <div>관람등급 : ${movie.movieRating}</div>
