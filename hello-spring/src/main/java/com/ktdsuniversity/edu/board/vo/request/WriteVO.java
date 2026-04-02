@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 /**
  * 게시글 등록을 위해
@@ -19,6 +20,7 @@ public class WriteVO {
 	
 	private String id;
 	@NotEmpty(message = "제목은 반드시 입력해주세요.")
+	@Size(min = 3, message = "게시글의 제목은 3글자 이상으로 작성해야 합니다.")
 	private String subject;
 	@NotEmpty(message = "이메일 형태가 아닙니다.")
 	@Email(message = "이메일 형태가 아닙니다.")

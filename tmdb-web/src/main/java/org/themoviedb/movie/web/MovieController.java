@@ -3,7 +3,10 @@ package org.themoviedb.movie.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +15,8 @@ import org.themoviedb.movie.vo.MovieVO;
 import org.themoviedb.movie.vo.request.UpdateVO;
 import org.themoviedb.movie.vo.request.WriteVO;
 import org.themoviedb.movie.vo.response.SearchResultVO;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class MovieController {
@@ -39,7 +44,12 @@ public class MovieController {
     
 // 영화 등록 처리 엔드포인트 생성 ( /write ) - 영화 등록 처리 (insert 수행)
     @PostMapping("/write")
-    public String doWriteAction(WriteVO writeVO) {
+    public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model) {
+
+      if(bindingResult.hasErrors()) {
+          model.addAttribute("inputData",writeVO);
+          return "movie/write";
+      }
         
       boolean createResult = this.movieService.createNewMovie(writeVO);
         

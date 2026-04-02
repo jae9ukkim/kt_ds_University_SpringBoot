@@ -4,20 +4,26 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class WriteVO {
 
     private String movieId;
-    
+    @NotBlank(message = "포스터 URL을 입력해 주세요")
     private String posterUrl;
+    @NotBlank(message = "제목을 입력해 주세요")
     private String title;
     private String movieRating;
     private String openDate;
     private String openCountry;
     private int runningTime;
     private String introduce;
+    @NotBlank(message = "개요를 입력해 주세요")
     private String sysnopsis;
     private String originalTitle;
+    @NotBlank(message = "상태를 선택해 주세요")
     private String state;
+    @NotBlank(message = "원어를 입력해 주세요")
     private String language;
     private int budget;
     private int profit;

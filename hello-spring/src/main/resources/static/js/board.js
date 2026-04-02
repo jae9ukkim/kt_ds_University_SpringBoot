@@ -31,4 +31,27 @@ $().ready(function () {
     // ".attach-files" 아래에 추가
     $(".attach-files").append(fileInput).append(addButton);
   });
+
+  $("#writeVO").on("submit", function (event) {
+    // 에러메시지 element 초기화
+    $(this).find(".validation-error").remove();
+
+    // submit callback event 제거
+    event.preventDefault();
+
+    // 게시글의 제목은 3글자 이상으로 작성
+    var subject = $("#subject").val();
+    if (subject.length < 3) {
+      var subjectErrorMessage = $("<div>");
+      subjectErrorMessage.addClass("validation-error");
+      subjectErrorMessage.text(
+        "게시글의 제목은 3글자 이상으로 작성해야 합니다.",
+      );
+      $("#subject").after(subjectErrorMessage);
+    }
+
+    if ($(".validation-error").length === 0) {
+      this.submit();
+    }
+  });
 });
