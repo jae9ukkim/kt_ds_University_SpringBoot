@@ -3,7 +3,9 @@ package com.ktdsuniversity.edu.members.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +15,8 @@ import com.ktdsuniversity.edu.members.vo.MembersVO;
 import com.ktdsuniversity.edu.members.vo.request.RegistVO;
 import com.ktdsuniversity.edu.members.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.members.vo.response.SearchResultVO;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class MembersController {
@@ -27,7 +31,12 @@ public class MembersController {
 	}
 
 	@PostMapping("/regist")
-	public String doRegistAction(RegistVO registVO) {
+	public String doRegistAction(@Valid @ModelAttribute RegistVO registVO, BindingResult bindingResult, Model model) {
+		
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("inputData", registVO);
+			return "members/regist";
+		}
 		
 		boolean createResult = membersService.createNewMember(registVO);
 		System.out.println("계정 생성 성공? " + createResult);

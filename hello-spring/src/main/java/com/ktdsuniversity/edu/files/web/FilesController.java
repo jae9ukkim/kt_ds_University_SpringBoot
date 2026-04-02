@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ktdsuniversity.edu.files.service.FilesService;
 import com.ktdsuniversity.edu.files.vo.request.SearchFileVO;

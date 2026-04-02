@@ -1,43 +1,64 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%> <%@ taglib uri="http://www.springframework.org/tags/form"
+prefix="form" %>
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <title>회원가입</title>
+    <script type="text/javascript" src="/js/jquery-4.0.0.slim.min.js"></script>
+    <script type="text/javascript" src="/js/members.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/hello-spring.css" />
   </head>
   <body>
     <h1>회원가입</h1>
-    <form action="/regist" method="post">
+    <form:form modelAttribute="registVO" action="/regist" method="post">
       <div class="grid regist">
         <label for="email">이메일: </label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          placeholder="이메일을 입력하세요"
-        />
+        <div>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="이메일을 입력하세요"
+            value="${inputData.email}"
+          />
+          <form:errors path="email" element="div" cssClass="validation-error" />
+        </div>
+
         <label for="name">이름: </label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          placeholder="이름을 입력하세요"
-        />
+        <div>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="이름을 입력하세요"
+            value="${inputData.name}"
+          />
+          <form:errors path="name" element="div" cssClass="validation-error" />
+        </div>
+
         <label for="password">비밀번호: </label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="비밀번호를 입력하세요"
-        />
+        <div>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="비밀번호를 입력하세요"
+          />
+          <form:errors
+            path="password"
+            element="div"
+            cssClass="validation-error"
+          />
+        </div>
+
         <div class="btn-group">
           <div class="right-align">
             <input type="submit" value="저장" />
           </div>
         </div>
       </div>
-    </form>
+    </form:form>
   </body>
 </html>

@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -15,6 +17,9 @@ import com.ktdsuniversity.edu.board.vo.BoardVO;
 import com.ktdsuniversity.edu.board.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.board.vo.request.WriteVO;
 import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -51,13 +56,25 @@ public class BoardController {
 	}
 	
 	@PostMapping("/write")
-	public String doWriteAction(WriteVO writeVO) {
+	public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model) {
+		// bindingResult @Valid의 결과를 받아오는 파라미터
+		// BindingResult 반드시 @Valid 파라미터 이후에 작성
+		// 중간에 다른 것이 들어가면 안됨.
+		
+		// 사용자의 입력값을 검증했을 때, 에러가 있다면
+		if(bindingResult.hasErrors()) {
+			// 브라우저에게 "board/write" 페이지를 보여주도록 하고
+			// 해당 페이지에 사용자가 입력한 값을 전달한다.
+			model.addAttribute("inputData", writeVO);
+			return "board/write";
+		}
+		
 		System.out.println(writeVO.getSubject());
 		System.out.println(writeVO.getEmail());
 		System.out.println(writeVO.getContent());
 		
 		// create, update, delete => 성공/실패 여부 반환
-		boolean createResult =  this.boardService.createNewBoard(writeVO);
+		boolean createResult = this.boardService.createNewBoard(writeVO);
 		System.out.println("게시글 생성 성공? " + createResult);
 		
 		// redirect: 브라우저에게 다음 End Point를 요청하도록 지시
