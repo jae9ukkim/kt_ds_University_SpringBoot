@@ -7,6 +7,14 @@ $().ready(function () {
     // submit callback event 막기
     event.preventDefault();
 
+    var budget = $("#budget");
+    numberCheck(budget);
+    var profit = $("#profit");
+    numberCheck(profit);
+    var runningTime = $("#runningTime");
+    numberCheck(runningTime);
+    
+    
     var posterUrl = $("#posterUrl");
     validationCheck(posterUrl, "포스터 URL을 입력해 주세요.");
     var title = $("#title");
@@ -29,6 +37,12 @@ $().ready(function () {
       errorMessage.addClass("validation-error");
       errorMessage.text(errMsg);
       selector.after(errorMessage);
+    }
+  }
+  
+  function numberCheck(selector) {
+    if(!selector.val()) {
+        selector.val(0);
     }
   }
 });

@@ -50,6 +50,14 @@ public class MovieController {
           model.addAttribute("inputData",writeVO);
           return "movie/write";
       }
+      
+//      String posterUrl = writeVO.getPosterUrl();
+//      posterUrl = posterUrl.replace("<", "&lt;").replace(">","&gt;");
+//      writeVO.setPosterUrl(posterUrl);
+//
+//      String title = writeVO.getTitle();
+//      title = title.replace("<", "&lt;").replace(">","&gt;");
+//      writeVO.setPosterUrl(title);
         
       boolean createResult = this.movieService.createNewMovie(writeVO);
         

@@ -24,6 +24,11 @@ public class MultipartFileHandler {
         }
         
         for(int i = 0; i < uploadFiles.size(); i++) {
+        	
+        	if(uploadFiles.get(i).isEmpty()) {
+        		continue;
+        	}
+        	
             String obfuscateName = UUID.randomUUID().toString();
 
             File storeFile = new File("C:\\uploadFilese", obfuscateName);
