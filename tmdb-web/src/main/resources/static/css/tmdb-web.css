@@ -4,8 +4,13 @@
   box-sizing: border-box;
 }
 
-div.validation-error {
+div.validation-error,
+.warning {
   color: red;
+}
+
+.pass {
+  color: blue;
 }
 
 div.grid {
@@ -98,3 +103,15 @@ div.update > label {
   padding-right: 0.25rem;
 }
 /* update style 끝 */
+
+/* regist style 시작 */
+div.regist {
+  width: 500px;
+  margin: auto;
+  row-gap: 0.125rem;
+}
+
+div.regist > input {
+  height: 3.25rem;
+}
+/* regist style 끝 */

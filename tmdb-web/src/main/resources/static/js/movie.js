@@ -1,6 +1,3 @@
-/**
- *
- */
 $().ready(function () {
   $("#writeVO").on("submit", function (event) {
     $(this).find(".validation-error").remove();
@@ -13,8 +10,7 @@ $().ready(function () {
     numberCheck(profit);
     var runningTime = $("#runningTime");
     numberCheck(runningTime);
-    
-    
+
     var posterUrl = $("#posterUrl");
     validationCheck(posterUrl, "포스터 URL을 입력해 주세요.");
     var title = $("#title");
@@ -39,10 +35,10 @@ $().ready(function () {
       selector.after(errorMessage);
     }
   }
-  
+
   function numberCheck(selector) {
-    if(!selector.val()) {
-        selector.val(0);
+    if (!selector.val()) {
+      selector.val(0);
     }
   }
 });
