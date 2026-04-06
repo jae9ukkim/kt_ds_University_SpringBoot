@@ -70,6 +70,15 @@ public class BoardController {
 		// BindingResult 반드시 @Valid 파라미터 이후에 작성
 		// 중간에 다른 것이 들어가면 안됨.
 		
+	    // 로그인 데이터(__LOGIN_DATA__)에서 로그인 한 사용자의 이메일을 가져온다.
+	    HttpSession session = request.getSession();
+	    MembersVO loginMember = (MembersVO)session.getAttribute("__LOGIN_DATA__");
+	    if(loginMember == null) {
+	        return "redirect:/login";
+	    }
+	    
+	    writeVO.setEmail(loginMember.getEmail());
+	    
 		// 사용자의 입력값을 검증했을 때, 에러가 있다면
 		if(bindingResult.hasErrors()) {
 			// 브라우저에게 "board/write" 페이지를 보여주도록 하고
@@ -78,10 +87,6 @@ public class BoardController {
 			return "board/write";
 		}
 		
-		// 로그인 데이터(__LOGIN_DATA__)에서 로그인 한 사용자의 이메일을 가져온다.
-		HttpSession session = request.getSession();
-		MembersVO loginMember = (MembersVO)session.getAttribute("__LOGIN_DATA__");
-		writeVO.setEmail(loginMember.getEmail());
 		
 		System.out.println(writeVO.getSubject());
 		System.out.println(writeVO.getEmail());
