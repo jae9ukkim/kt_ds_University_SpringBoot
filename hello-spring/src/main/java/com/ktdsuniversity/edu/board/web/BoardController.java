@@ -53,7 +53,13 @@ public class BoardController {
 	
 	// 게시글 등록 화면 보여주는 EndPoint
 	@GetMapping("/write")
-	public String viewWritePage() {
+	public String viewWritePage(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		
+		if(session.getAttribute("__LOGIN_DATA__") == null) {
+			return "redirect:/";
+		}
 		
 		return "board/write";
 	}
