@@ -17,6 +17,7 @@ pageEncoding="UTF-8"%> <%@ taglib uri="jakarta.tags.core" prefix="c" %>
       action="/update/${article.id}"
       enctype="multipart/form-data"
     >
+      <input type="hidden" name="fileGroupId" value="${article.fileGroupId}">
       <div class="grid update">
         <label for="subject">제목</label>
         <input

@@ -162,6 +162,13 @@ div.regist {
   grid-template-rows: epeat(4, minmax(1.75rem, auto)) 1fr;
   row-gap: 0.625rem;
 }
+
+div.regist > div.input-div > input,
+div.write > div.input-div > input,
+div.login > div.input-div > input {
+  width: 100%;
+  display: block;
+}
 /* 회원가입 style 끝*/
 
 /* 게시글 내용 조회 Style 시작 */
@@ -171,3 +178,11 @@ div.view {
   row-gap: 0.625rem;
 }
 /* 게시글 내용 조회 Style 끝 */
+
+/* 회원 목록 style 시작 */
+div.login {
+  grid-template-columns: 7.5rem 1fr;
+  grid-template-rows: repeat(2, minmax(1.75rem, auto)) 1fr;
+  row-gap: 0.625rem;
+}
+/* 회원 목록 style 끝 */

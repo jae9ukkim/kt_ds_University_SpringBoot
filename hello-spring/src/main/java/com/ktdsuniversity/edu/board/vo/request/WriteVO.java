@@ -22,11 +22,10 @@ public class WriteVO {
 	@NotEmpty(message = "제목은 반드시 입력해주세요.")
 	@Size(min = 3, message = "게시글의 제목은 3글자 이상으로 작성해야 합니다.")
 	private String subject;
-	@NotEmpty(message = "이메일 형태가 아닙니다.")
-	@Email(message = "이메일 형태가 아닙니다.")
 	private String email;
 	private String content;
 	private List<MultipartFile> attachFile;
+	private String fileGroupId;
 	
 	public String getSubject() {
 		return this.subject;
@@ -57,6 +56,12 @@ public class WriteVO {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getFileGroupId() {
+		return this.fileGroupId;
+	}
+	public void setFileGroupId(String fileGroupId) {
+		this.fileGroupId = fileGroupId;
 	}
 	
 }

@@ -17,7 +17,10 @@ import com.ktdsuniversity.edu.board.vo.BoardVO;
 import com.ktdsuniversity.edu.board.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.board.vo.request.WriteVO;
 import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
+import com.ktdsuniversity.edu.members.vo.MembersVO;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,7 +59,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/write")
-	public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model) {
+	public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model, HttpServletRequest request ) {
 		// bindingResult @Valid의 결과를 받아오는 파라미터
 		// BindingResult 반드시 @Valid 파라미터 이후에 작성
 		// 중간에 다른 것이 들어가면 안됨.
@@ -68,6 +71,11 @@ public class BoardController {
 			model.addAttribute("inputData", writeVO);
 			return "board/write";
 		}
+		
+		// 로그인 데이터(__LOGIN_DATA__)에서 로그인 한 사용자의 이메일을 가져온다.
+		HttpSession session = request.getSession();
+		MembersVO loginMember = (MembersVO)session.getAttribute("__LOGIN_DATA__");
+		writeVO.setEmail(loginMember.getEmail());
 		
 		System.out.println(writeVO.getSubject());
 		System.out.println(writeVO.getEmail());

@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ktdsuniversity.edu.members.service.MembersService;
 import com.ktdsuniversity.edu.members.vo.MembersVO;
+import com.ktdsuniversity.edu.members.vo.request.LoginVO;
 import com.ktdsuniversity.edu.members.vo.request.RegistVO;
 import com.ktdsuniversity.edu.members.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.members.vo.response.DuplicateResultVO;
 import com.ktdsuniversity.edu.members.vo.response.SearchResultVO;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -25,7 +28,7 @@ public class MembersController {
 
 	@Autowired
 	private MembersService membersService;
-	
+
 	@ResponseBody
 	@GetMapping("/regist/check/duplicate/{email}")
 	public DuplicateResultVO doCheckDuplicateEmailAction(@PathVariable String email) {
@@ -125,4 +128,32 @@ public class MembersController {
 		return "members/list";
 	}
 	
+	@GetMapping("/login")
+	public String viewLoginPage() {
+		return "members/login";
+	}
+
+	@PostMapping("/login")
+	public String doLoginAction(@Valid @ModelAttribute LoginVO loginVO, BindingResult bindingResult, Model model, HttpServletRequest request) {
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("loginData", loginVO);
+			return "members/login";
+		}
+		
+		String userIp = request.getRemoteAddr();
+		loginVO.setIp(userIp);
+		
+		MembersVO member = this.membersService.findMemberByEmailAndPassword(loginVO);
+		
+		// 서버의 세션을 삭제한다. - 로그아웃
+		request.getSession().invalidate();
+		
+		// request.getSession(); HttpRequestHeader로 전달된 JSESSIONID읭 객체를 반환.
+		// request.getSession(true); 기존 JESEIIONID로 발급된 세션객체는 버리고, 새로운 ID의 세션객체를 생성 후 반환
+		HttpSession session = request.getSession(true);
+		
+		session.setAttribute("__LOGIN_DATA__", member);
+		
+		return "redirect:/";
+	}
 }

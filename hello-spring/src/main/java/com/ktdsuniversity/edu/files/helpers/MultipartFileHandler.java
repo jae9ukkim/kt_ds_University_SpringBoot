@@ -19,8 +19,9 @@ public class MultipartFileHandler {
 	@Autowired
 	private FilesDao filesDao;
 	
-	public void upload(List<MultipartFile> attachFiles, String fileGroupId) {
+	public String upload(List<MultipartFile> attachFiles, String fileGroupId) {
 		if(attachFiles != null && attachFiles.size() > 0) {
+			
 			for(int i=0; i < attachFiles.size(); i++) {
 				
 				if(attachFiles.get(i).isEmpty()) {
@@ -62,6 +63,28 @@ public class MultipartFileHandler {
 				}
 				
 			}
+			
+			return fileGroupId;
 		}
+		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param attachFiles
+	 * @return 첨부파일의 그룹 아이디
+	 */
+	public String upload(List<MultipartFile> attachFiles) {
+		if(attachFiles != null && attachFiles.size() > 0) {
+			
+			String fileGroupId = this.filesDao.selectNewFileGroupId();
+			this.filesDao.insertFileGroupId(fileGroupId);
+			this.upload(attachFiles, fileGroupId);
+			
+			return fileGroupId;
+		}
+		
+		return null;
 	}
 }

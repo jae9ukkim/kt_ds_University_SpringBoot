@@ -24,4 +24,8 @@ public interface FilesDao {
 
 	int deleteFilesByFileGroupId(String id);
 
+	String selectNewFileGroupId();
+
+	int insertFileGroupId(String fileGroupId);
+
 }
