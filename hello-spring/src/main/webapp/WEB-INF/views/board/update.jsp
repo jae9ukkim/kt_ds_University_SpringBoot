@@ -1,15 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%> <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>게시글 수정</title>
-    <script type="text/javascript" src="/js/jquery-4.0.0.slim.min.js"></script>
-    <script type="text/javascript" src="/js/board.js"></script>
-    <link type="text/css" rel="stylesheet" href="/css/hello-spring.css" />
-  </head>
-  <body>
+<jsp:include page="/WEB-INF/views/templates/header.jsp">
+    <jsp:param value="게시글 수정" name="title"/>
+    <jsp:param value="<script type='text/javascript' src='/js/board.js'></script>" name="scripts"/>
+</jsp:include>
     <h1>게시글 수정</h1>
     <!-- action : form 내부의 value를 전송할 엔드포인트 -->
     <form
@@ -27,14 +21,14 @@ pageEncoding="UTF-8"%> <%@ taglib uri="jakarta.tags.core" prefix="c" %>
           placeholder="제목을 입력하세요."
           value="${article.subject}"
         />
-        <label for="email">이메일</label>
+        <!-- <label for="email">이메일</label>
         <input
           type="email"
           name="email"
           id="email"
           placeholder="이메일을 입력하세요."
           value="${article.email}"
-        />
+        /> -->
 
         <label for="attach-files">첨부파일</label>
         <div id="attach-files" class="attach-files">
@@ -62,5 +56,4 @@ ${article.content}</textarea
         </div>
       </div>
     </form>
-  </body>
-</html>
+<jsp:include page="/WEB-INF/views/templates/footer.jsp"></jsp:include>

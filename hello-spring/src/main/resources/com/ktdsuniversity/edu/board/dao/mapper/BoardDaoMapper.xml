@@ -5,22 +5,29 @@
 <mapper namespace="com.ktdsuniversity.edu.board.dao.BoardDao">
 
     <select id="selectBoardCount" resultType="_int">
-        SELECT COUNT(ID)
-          FROM BOARD
+        SELECT COUNT(B.ID)
+          FROM BOARD B
+         INNER JOIN MEMBERS M
+            ON B.EMAIL = M.EMAIL 
     </select>
 
-    <select id="selectBoardList" resultType="com.ktdsuniversity.edu.board.vo.BoardVO">
-        SELECT ID
-			 , SUBJECT
-			 , CONTENT
-			 , EMAIL
-			 , VIEW_CNT
-			 , TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') AS CRT_DT
-			 , TO_CHAR(MDFY_DT, 'YYYY-MM-DD HH24:MI:SS') AS MDFY_DT
-			 , FILE_NAME
-			 , ORIGIN_FILE_NAME
-          FROM BOARD
-         ORDER BY ID DESC
+
+    <select id="selectBoardList" resultMap="BoardVOMap">
+        SELECT B.ID
+			 , B.SUBJECT
+			 , B.CONTENT
+			 , B.EMAIL
+			 , B.VIEW_CNT
+			 , TO_CHAR(B.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') AS CRT_DT
+			 , TO_CHAR(B.MDFY_DT, 'YYYY-MM-DD HH24:MI:SS') AS MDFY_DT
+			 , B.FILE_NAME
+			 , B.ORIGIN_FILE_NAME
+			 , M.NAME
+			 , M.REGIST_DATE
+          FROM BOARD B
+         INNER JOIN MEMBERS M
+            ON B.EMAIL = M.EMAIL 
+         ORDER BY B.ID DESC
     </select>
     
     <insert id="insertNewBoard" parameterType="com.ktdsuniversity.edu.board.vo.request.WriteVO">
@@ -74,6 +81,12 @@
         <result column="FILE_NAME"        property="fileName"/>
         <result column="ORIGIN_FILE_NAME" property="originFileName"/>
          -->
+        <!-- 단일 VO에게 값을 할당하는 방법
+             하나의 ResultMap에서 collection과 association이 동시에 사용될 때
+             collection이 가장 마지막에 위치해야 한다. -->
+        <association property="membersVO" javaType="com.ktdsuniversity.edu.members.vo.MembersVO" autoMapping="true">
+            <id column="EMAIL" property="email" />
+        </association>
         <!-- BoardVO에 있는 list는 <collection> tag 이용. collection은 list와 대응 
         property: list의 변수명
         javaType: list 
@@ -110,7 +123,11 @@
 		     , F.EXTEND_NAME
 		     , F.FILE_LENGTH
 		     , F.FILE_PATH
+		     , M.NAME
+		     , TO_CHAR(M.REGIST_DATE, 'YYYY-MM-DD HH24:MI:SS') AS REGIST_DATE
 		  FROM BOARD B
+		 INNER JOIN MEMBERS M
+		    ON B.EMAIL = M.EMAIL 
 		  LEFT JOIN ( SELECT F.FILE_NUM
 		                   , FG.FILE_GROUP_ID
 		                   , F.OBFUSCATE_NAME

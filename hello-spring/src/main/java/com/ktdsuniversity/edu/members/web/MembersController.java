@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.ktdsuniversity.edu.members.service.MembersService;
 import com.ktdsuniversity.edu.members.vo.MembersVO;
@@ -129,9 +130,7 @@ public class MembersController {
 	}
 	
 	@GetMapping("/login")
-	public String viewLoginPage(HttpServletRequest request) {
-		
-		request.getSession().getAttribute("");
+	public String viewLoginPage() {
 		return "members/login";
 	}
 
@@ -150,8 +149,8 @@ public class MembersController {
 		// 서버의 세션을 삭제한다. - 로그아웃
 		request.getSession().invalidate();
 		
-		// request.getSession(); HttpRequestHeader로 전달된 JSESSIONID읭 객체를 반환.
-		// request.getSession(true); 기존 JESEIIONID로 발급된 세션객체는 버리고, 새로운 ID의 세션객체를 생성 후 반환
+		// request.getSession(); HttpRequestHeader로 전달된 JSESSIONID의 객체를 반환.
+		// request.getSession(true); 기존 JSESSIONID로 발급된 세션객체는 버리고, 새로운 ID의 세션객체를 생성 후 반환
 		HttpSession session = request.getSession(true);
 		
 		session.setAttribute("__LOGIN_DATA__", member);
@@ -160,10 +159,24 @@ public class MembersController {
 	}
 	
 	@GetMapping("/logout")
-	public String doLogoutAction(HttpServletRequest request) {
+	public String doLogoutAction(HttpSession session) {
 		
-		request.getSession().invalidate();
+		session.invalidate();
 		
 		return "redirect:/login";
+	}
+	
+	@GetMapping("/delete-me")
+	public String doDeleteAction(@SessionAttribute("__LOGIN_DATA__") MembersVO loginMember ,HttpSession session) {
+		
+		// 1. 로그인 세션에서 회원의 이메일을 가져온다.
+		String loginEmail = loginMember.getEmail();
+		// 2. MEMBERS 테이블에서 회원의 정보를 이메일을 이용해 삭제한다.
+		this.membersService.deleteMemberByEmail(loginEmail);
+		// 3. 현재 로그인된 사용자를 로그아웃 시킨다.
+		session.invalidate();
+		// 4. "members/deletesuccess" 페이지를 보여준다.
+		//    "탈퇴가 완료됐습니다. 다음에 다시 만나요!"
+		return "members/deletesuccess";
 	}
 }

@@ -1,14 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%> 
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>회원 목록</title>
-    <link rel="stylesheet" type="text/css" href="/css/hello-spring.css" />
-  </head>
-  <body>
+<jsp:include page="/WEB-INF/views/templates/header.jsp">
+    <jsp:param value="회원 목록" name="title"/>    
+</jsp:include>
     <h1>회원 목록</h1>
     <div>회원 수 : ${count}</div>
     <div class="grid list">
@@ -43,5 +38,5 @@ pageEncoding="UTF-8"%>
         </div>
       </div>
     </div>
-  </body>
+  <jsp:include page="/WEB-INF/views/templates/footer.jsp"></jsp:include>
 </html>

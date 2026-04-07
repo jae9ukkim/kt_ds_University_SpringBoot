@@ -19,11 +19,10 @@ import com.ktdsuniversity.edu.board.vo.request.WriteVO;
 import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
 import com.ktdsuniversity.edu.members.vo.MembersVO;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 
 @Controller
@@ -53,29 +52,17 @@ public class BoardController {
 	
 	// 게시글 등록 화면 보여주는 EndPoint
 	@GetMapping("/write")
-	public String viewWritePage(HttpServletRequest request) {
-		
-		HttpSession session = request.getSession();
-		
-		if(session.getAttribute("__LOGIN_DATA__") == null) {
-			return "redirect:/";
-		}
-		
+	public String viewWritePage() {
 		return "board/write";
 	}
 	
 	@PostMapping("/write")
-	public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model, HttpServletRequest request ) {
+	public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model, @SessionAttribute("__LOGIN_DATA__") MembersVO loginMember) {
 		// bindingResult @Valid의 결과를 받아오는 파라미터
 		// BindingResult 반드시 @Valid 파라미터 이후에 작성
 		// 중간에 다른 것이 들어가면 안됨.
 		
-	    // 로그인 데이터(__LOGIN_DATA__)에서 로그인 한 사용자의 이메일을 가져온다.
-	    HttpSession session = request.getSession();
-	    MembersVO loginMember = (MembersVO)session.getAttribute("__LOGIN_DATA__");
-	    if(loginMember == null) {
-	        return "redirect:/login";
-	    }
+	    // 로그인 데이터(__LOGIN_DATA__)에서 로그인 한 사용자의 이메일을 가져온다.	    
 	    
 	    writeVO.setEmail(loginMember.getEmail());
 	    
@@ -127,16 +114,22 @@ public class BoardController {
 	}
 	
 	@GetMapping("/update/{articleId}")
-	public String viewUpdatePage(@PathVariable String articleId, Model model) {
+	public String viewUpdatePage(@PathVariable String articleId, Model model, @SessionAttribute("__LOGIN_DATA__") MembersVO loginMember) {
 		
 		BoardVO data = this.boardService.findBoardByArticleId(articleId, ReadType.UPDATE);
 		model.addAttribute("article", data);
+		
+		if(!data.getEmail().equals(loginMember.getEmail())) {
+			throw new IllegalArgumentException("잘못된 접근입니다.");
+		}
 		
 		return "board/update";
 	}
 	
 	@PostMapping("/update/{articleId}")
-	public String doUpdateAction(@PathVariable String articleId, UpdateVO updateVO) {
+	public String doUpdateAction(@PathVariable String articleId, UpdateVO updateVO, @SessionAttribute("__LOGIN_DATA__") MembersVO loginMember) {
+		
+		updateVO.setEmail(loginMember.getEmail());
 		
 		updateVO.setId(articleId);
 		boolean updateResult = this.boardService.updateBoardByArticleId(updateVO);

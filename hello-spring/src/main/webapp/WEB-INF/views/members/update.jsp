@@ -1,13 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>사용자 정보 수정</title>
-    <link rel="stylesheet" type="text/css" href="/css/hello-spring.css" />
-  </head>
-  <body>
+<jsp:include page="/WEB-INF/views/templates/header.jsp">
+    <jsp:param value="회원정보 수정" name="title"/>    
+</jsp:include>
     <h1>회원가입</h1>
     <form action="/member/update/${member.email}" method="post">
       <div class="grid regist">
@@ -42,5 +37,4 @@ pageEncoding="UTF-8"%>
         </div>
       </div>
     </form>
-  </body>
-</html>
+<jsp:include page="/WEB-INF/views/templates/footer.jsp"></jsp:include>
