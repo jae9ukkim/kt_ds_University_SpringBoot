@@ -1,0 +1,56 @@
+package com.ktdsuniversity.edu.exceptions.handlers;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.ktdsuniversity.edu.exceptions.HelloSpringException;
+
+/**
+ * Spring Application에서 던져진 catch되지 않은
+ * 예외들을 처리하는 클래스
+ * 
+ * @Controller와 유사한 형태
+ * ==> URL이 nedPoint 
+ * 
+ * @controllerAdvice
+ * ==> Exception이 endpoint
+ */
+@ControllerAdvice
+public class GlobalExceptionHandler {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	
+	/**
+	 * HelloSpringException이 던져지면,
+	 * viewErrorPage가 실행된다.
+	 * 실행된 결과는 ModelAndView가 된다
+	 * 
+	 * @reurn 사용자에게 보여줄 템플릿의 이름
+	 */
+
+	@ExceptionHandler(HelloSpringException.class)
+	public String viewErrorPage(HelloSpringException hse, Model model){
+		logger.error(hse.getMessage(), hse); // error 추적용
+		
+		String message = hse.getMessage();// error 추적용
+		model.addAttribute("errorMessage",message);
+		
+		String errorPage = hse.getErrorPage();
+		Object modelData = hse.getObject();
+		if(modelData != null ) {
+			model.addAttribute("errorData", modelData);
+		}
+		
+		return errorPage;
+	}
+	
+	@ExceptionHandler(RuntimeException.class)
+	public String viewSystemErrorPage(RuntimeException re) {
+		logger.error(re.getMessage(), re);
+		
+		return "errors/500";
+	}
+}

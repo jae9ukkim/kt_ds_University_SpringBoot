@@ -1,5 +1,7 @@
 package com.ktdsuniversity.edu.members.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +28,8 @@ import jakarta.validation.Valid;
 
 @Controller
 public class MembersController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MembersController.class);
 
 	@Autowired
 	private MembersService membersService;
@@ -62,7 +66,7 @@ public class MembersController {
 		}
 		
 		boolean createResult = membersService.createNewMember(registVO);
-		System.out.println("계정 생성 성공? " + createResult);
+		logger.debug("계정 생성 성공? {}", createResult);
 		
 //		return "redirect:/login";
 		return "redirect:/member";
@@ -97,7 +101,7 @@ public class MembersController {
 		
 		updateVO.setEmail(email);
 		boolean updateResult = this.membersService.updateMemberByEmail(updateVO);
-		System.out.println("수정 결과? " + updateResult);
+		logger.debug("수정 결과? {}", updateResult);
 		
 		return "redirect:/member/view/" + email;
 	}
@@ -106,7 +110,7 @@ public class MembersController {
 	public String doDeleteMemberAction(@RequestParam String email) {
 		
 		boolean deleteResult = this.membersService.deleteMemberByEmail(email);
-		System.out.println("삭제 성공? " + deleteResult);
+		logger.debug("삭제 성공? {}", deleteResult);
 		
 		return "redirect:/member";
 	}
@@ -135,7 +139,7 @@ public class MembersController {
 	}
 
 	@PostMapping("/login")
-	public String doLoginAction(@Valid @ModelAttribute LoginVO loginVO, BindingResult bindingResult, Model model, HttpServletRequest request) {
+	public String doLoginAction(@Valid @ModelAttribute LoginVO loginVO, BindingResult bindingResult, Model model, @RequestParam(required = false, defaultValue = "/") String go, HttpServletRequest request) {
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("loginData", loginVO);
 			return "members/login";
@@ -155,7 +159,7 @@ public class MembersController {
 		
 		session.setAttribute("__LOGIN_DATA__", member);
 		
-		return "redirect:/";
+		return "redirect:" + go;
 	}
 	
 	@GetMapping("/logout")

@@ -2,6 +2,8 @@ package com.ktdsuniversity.edu.board.web;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,7 @@ import com.ktdsuniversity.edu.board.vo.BoardVO;
 import com.ktdsuniversity.edu.board.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.board.vo.request.WriteVO;
 import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
+import com.ktdsuniversity.edu.exceptions.HelloSpringException;
 import com.ktdsuniversity.edu.members.vo.MembersVO;
 
 import jakarta.validation.Valid;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 public class BoardController {
+	
+	private static Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
 	/**
 	 * 빈 컨테이너에 들어있는 객체 중 타입이 일치하는 객체를 할당 받는다.
@@ -75,13 +80,13 @@ public class BoardController {
 		}
 		
 		
-		System.out.println(writeVO.getSubject());
-		System.out.println(writeVO.getEmail());
-		System.out.println(writeVO.getContent());
+		logger.debug(writeVO.getSubject());
+		logger.debug(writeVO.getEmail());
+		logger.debug(writeVO.getContent());
 		
 		// create, update, delete => 성공/실패 여부 반환
 		boolean createResult = this.boardService.createNewBoard(writeVO);
-		System.out.println("게시글 생성 성공? " + createResult);
+		logger.debug("게시글 생성 성공? {}", createResult);
 		
 		// redirect: 브라우저에게 다음 End Point를 요청하도록 지시
 		// redirect:/ ==> 브라우저에게 "/" End Point로 이동하도록 지시.
@@ -108,7 +113,7 @@ public class BoardController {
 	@GetMapping("/delete")
 	public String doDeleteAction(@RequestParam String id) {
 		boolean deleteResult = this.boardService.deleteBoardById(id);
-		System.out.println("게시글 삭제 성공: " + deleteResult);
+		logger.debug("게시글 삭제 성공: {}", deleteResult);
 		
 		return "redirect:/";
 	}
@@ -119,8 +124,10 @@ public class BoardController {
 		BoardVO data = this.boardService.findBoardByArticleId(articleId, ReadType.UPDATE);
 		model.addAttribute("article", data);
 		
+		// TODO 게시글의 이메일과 세션의 이메일을 비교할 때는
+		// 항상 ServiceImpl에서 수행한다.
 		if(!data.getEmail().equals(loginMember.getEmail())) {
-			throw new IllegalArgumentException("잘못된 접근입니다.");
+			throw new HelloSpringException("잘못된 접근입니다.", "errors/403");
 		}
 		
 		return "board/update";
@@ -133,7 +140,7 @@ public class BoardController {
 		
 		updateVO.setId(articleId);
 		boolean updateResult = this.boardService.updateBoardByArticleId(updateVO);
-		System.out.println("수정 성공? " + updateResult);
+		logger.debug("수정 성공? {}", updateResult);
 		
 		return "redirect:/view/" + articleId;
 	}

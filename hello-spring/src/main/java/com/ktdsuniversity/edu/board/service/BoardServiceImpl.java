@@ -3,8 +3,11 @@ package com.ktdsuniversity.edu.board.service;
 import java.io.File;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ktdsuniversity.edu.board.dao.BoardDao;
@@ -13,11 +16,14 @@ import com.ktdsuniversity.edu.board.vo.BoardVO;
 import com.ktdsuniversity.edu.board.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.board.vo.request.WriteVO;
 import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
+import com.ktdsuniversity.edu.exceptions.HelloSpringException;
 import com.ktdsuniversity.edu.files.dao.FilesDao;
 import com.ktdsuniversity.edu.files.helpers.MultipartFileHandler;
 
 @Service
 public class BoardServiceImpl implements BoardService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(BoardServiceImpl.class);
 	
 	/**
 	 * 빈 컨테이너에 들어있는 객체 중 타입이 일치하는 객체를 할당 받는다.
@@ -50,6 +56,7 @@ public class BoardServiceImpl implements BoardService {
 		return result;
 	}
 
+	@Transactional
 	@Override
 	public boolean createNewBoard(WriteVO writeVO) {
 		// 첨부파일 업로드
@@ -64,23 +71,22 @@ public class BoardServiceImpl implements BoardService {
 		//	  update ==> update 된 row의 개수 반환
 		//	  delete ==> delete 된 row의 개수 반환
 		int insertCount = this.boardDao.insertNewBoard(writeVO);
-		System.out.println("생성된 게시글의 개수? " + insertCount);
+		logger.debug("생성된 게시글의 개수? {}", insertCount);
 		
 		return insertCount == 1;
 	}
 
+	@Transactional
 	@Override
 	public BoardVO findBoardByArticleId(String articleId, ReadType readType) {
 		if(readType == ReadType.VIEW) {
 			// 1. 조회수 증가
 			int updateCount = this.boardDao.updateViewCntIncreaseById(articleId);
-			System.out.println("조회수가 증가 게시글의 수: "+updateCount);
+			logger.debug("조회수가 증가 게시글의 수: {}", updateCount);
 			
 			if(updateCount == 0) {
 				// 존재하지 않는 게시글을 조회하려 했다.
-				return null;
-//			실무에서는 아래와 같이 처리
-//			throw new RuntimeException("존재하지 않는 게시글입니다.");
+				throw new HelloSpringException("존재하지 않는 게시글입니다.", "errors/404");
 			}
 		}
 		
@@ -92,6 +98,7 @@ public class BoardServiceImpl implements BoardService {
 		return board;
 	}
 
+	@Transactional
 	@Override
 	public boolean deleteBoardById(String id) {
 		BoardVO boardVO = this.boardDao.selectBoardById(id);
@@ -111,11 +118,12 @@ public class BoardServiceImpl implements BoardService {
 		
 		// 파일 목록을 제거한 이후에 "FILES" 테이블에서 해당 파일 정보를 모두 삭제한다.
 		int deleteFileCount = this.filesDao.deleteFilesByFileGroupId(fileGroupId);
-		System.out.println("삭제한 파일 데이터의 수: " + deleteFileCount);
+		logger.debug("삭제한 파일 데이터의 수: {}", deleteFileCount);
 		
 		return deleteCount == 1;
 	}
 
+	@Transactional
 	@Override
 	public boolean updateBoardByArticleId(UpdateVO updateVO) {
 
@@ -129,7 +137,7 @@ public class BoardServiceImpl implements BoardService {
 			}
 			// 선택한 파일들을 FILES 테이블에서 제거
 			int deleteCount = this.filesDao.deleteFilesByFileGroupIdAndFileNums(updateVO);
-			System.out.println("삭제한 파일 데이터의 수: " + deleteCount);
+			logger.debug("삭제한 파일 데이터의 수: {}", deleteCount);
 		}
 		
 		// 업로드 파일 list 가져오기
