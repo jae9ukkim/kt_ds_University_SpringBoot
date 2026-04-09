@@ -1,5 +1,7 @@
 package org.themoviedb.actor.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,8 @@ import jakarta.validation.Valid;
 
 @Controller
 public class ActorController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ActorController.class);
 
     @Autowired
     private ActorService actorService;
@@ -32,6 +36,7 @@ public class ActorController {
         }
         
         Boolean createResult = this.actorService.createNewActor(writeVO);
+        	logger.debug("배우 등록 결과: {}", createResult);
         
         return "redirect:/actor/list";
     }

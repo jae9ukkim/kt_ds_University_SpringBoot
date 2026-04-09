@@ -3,9 +3,10 @@ pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <jsp:include page="/WEB-INF/views/templates/header.jsp">
     <jsp:param value="게시글 내용 조회 : ${article.id}" name="title"/>
+    <jsp:param value="<script type='text/javascript' src='/js/reply.js'></script>" name="scripts"/>
 </jsp:include>
     <h1>게시글 내용 조회</h1>
-    <div class="grid view">
+    <div class="grid view" data-article-id="${article.id}">
       <span>아이디</span>
       <div>${article.id}</div>
 
@@ -37,6 +38,37 @@ pageEncoding="UTF-8"%>
       <span>내용</span>
       <!-- <pre> ==> Presentation -->
       <pre>${article.content}</pre>
+
+      <div class="replies-count">
+        총 <span class="count">0</span>개의 댓글이 검색되었습니다.
+      </div>
+      <ul class="replies"></ul>
+      <div class="reply-form">
+        <input type="text" class="parent-reply-id" readonly />
+        <textarea class="reply-content"></textarea>
+        <input type="file" class="reply-attach-file" />
+        <button class="reply-save"  data-article-id="${article.id}">등록</button>
+      </div>
+      
+      <template class="reply-item-template">
+        <li class="reply-item" data-reply-id="#replyId#">
+          <div class="writer">
+            <span class="writer-name">#name#</span>
+            <span class="writer-email">(#email#)</span>
+          </div>
+          <div class="dates">
+            <div class="create-date">#createDate# 작성</div>
+            <div class="modify-date">#modifyDate# 수정</div>
+          </div>
+          <pre class="content">#content#</pre>
+          <div class="links">
+            <span class="links-write">답글 쓰기</span>
+            <span class="links-recommend">추천하기</span>
+            <span class="links-update">수정</span>
+            <span class="links-delete">삭제</span>
+          </div>
+        </li>
+      </template>
 
       <c:if test="${sessionScope.__LOGIN_DATA__.email eq article.email}">
         <div class="btn-group">

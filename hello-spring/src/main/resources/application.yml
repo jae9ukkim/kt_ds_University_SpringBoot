@@ -1,5 +1,5 @@
 Server:
-  port: 8081
+  port: 8080
   
 # 콘솔 로그 레벨 변경
 #logging:
