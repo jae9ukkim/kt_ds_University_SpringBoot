@@ -36,7 +36,7 @@ public class ActorController {
         }
         
         Boolean createResult = this.actorService.createNewActor(writeVO);
-        	logger.debug("배우 등록 결과: {}", createResult);
+        logger.debug("배우 등록 결과: {}", createResult);
         
         return "redirect:/actor/list";
     }

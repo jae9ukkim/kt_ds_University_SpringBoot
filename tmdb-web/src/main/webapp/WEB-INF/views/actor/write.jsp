@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <script type="text/javascript" src="/js/jquery-4.0.0.slim.min.js"></script>
+<script type="text/javascript" src="/js/actor.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/tmdb-web.css">
 <title>배우 등록</title>
 </head>
