@@ -1,6 +1,8 @@
 package com.ktdsuniversity.edu.replies.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +23,14 @@ import com.ktdsuniversity.edu.members.vo.MembersVO;
 import com.ktdsuniversity.edu.replies.service.RepliesService;
 import com.ktdsuniversity.edu.replies.vo.RepliesVO;
 import com.ktdsuniversity.edu.replies.vo.request.CreateVO;
+import com.ktdsuniversity.edu.replies.vo.request.UpdateVO;
+import com.ktdsuniversity.edu.replies.vo.response.RecommendResultVO;
 import com.ktdsuniversity.edu.replies.vo.response.SearchResultVO;
+import com.ktdsuniversity.edu.replies.vo.response.UpdateResultVO;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class RepliesController {
@@ -92,5 +99,44 @@ public class RepliesController {
 		SearchResultVO searchResult = this.repliesService.findRepliesByArticleId(articleId);
 		
 		return searchResult;
+	}
+	
+	@ResponseBody
+	@GetMapping("/api/replies/recommend/{replyId}")
+	public RecommendResultVO doRecommendAction(@PathVariable String replyId) {
+	
+		RecommendResultVO recommendResult = this.repliesService.increaseRecommendByReplyId(replyId);
+		
+		return recommendResult;
+	}
+
+	@ResponseBody
+	@GetMapping("/api/replies/delete/{replyId}")
+	public Map<String,String> doDeleteRecommendAction(@PathVariable String replyId) {
+				
+		Map<String, String> resultMap = new HashMap<>();
+		boolean deleteResult = this.repliesService.deleteRecommendByReplyId(replyId);
+		if(deleteResult) {
+			resultMap.put("replyId", replyId);
+		}
+		
+		return resultMap;
+	}
+	
+	@ResponseBody
+	@PostMapping("/api/replies/{replyId}")
+	public UpdateResultVO doUpdateReplyByReplyId(@PathVariable String replyId
+			, @Valid UpdateVO updateVO, BindingResult bindingResult) {
+		
+		if(bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			throw new HelloSpringApiException("파라미터가 충분하지 않습니다"
+					, HttpStatus.BAD_REQUEST.value(), errors);
+		}
+		
+		updateVO.setReplyId(replyId);
+		UpdateResultVO updateResult = this.repliesService.updateReply(updateVO);
+		
+		return updateResult;
 	}
 }

@@ -98,4 +98,23 @@
 		  START WITH R.PARENT_REPLY_ID IS NULL
 		CONNECT BY PRIOR R.ID = R.PARENT_REPLY_ID
     </select>
+    
+    <update id="updateRecommendByReplyId" parameterType="string">
+        UPDATE REPLIES
+           SET RECOMMEND_CNT = RECOMMEND_CNT + 1
+         WHERE ID = #{_parameter}
+    </update>
+    
+    <delete id="deleteRecommendByReplyId" parameterType="string">
+        DELETE FROM REPLIES
+        WHERE ID = #{_parameter}    
+    </delete>
+    
+    <update id="updateReplyByReplyId" parameterType="com.ktdsuniversity.edu.replies.vo.request.UpdateVO">
+        UPDATE REPLIES
+           SET REPLY = #{content}
+             , MDFY_DT = SYSDATE
+             , FILE_GROUP_ID = #{fileGroupId}
+         WHERE ID = #{replyId}
+    </update>
 </mapper>

@@ -41,7 +41,7 @@
 			 WHERE FILE_GROUP_ID = #{id}
 		</select>
 		
-        <select id="selectFilePathByFileGroupIdAndFileNums" resultType="string" parameterType="com.ktdsuniversity.edu.board.vo.request.UpdateVO">
+        <select id="selectFilePathByFileGroupIdAndFileNums" resultType="string" parameterType="com.ktdsuniversity.edu.files.vo.request.SearchFileGroupVO">
 	        SELECT FILE_PATH
 			  FROM FILES 
 			 WHERE FILE_GROUP_ID = #{fileGroupId}
@@ -57,7 +57,7 @@
              WHERE FILE_GROUP_ID = #{fileGroupId}
         </delete>
         
-        <delete id="deleteFilesByFileGroupIdAndFileNums" parameterType="com.ktdsuniversity.edu.board.vo.request.UpdateVO">
+        <delete id="deleteFilesByFileGroupIdAndFileNums" parameterType="com.ktdsuniversity.edu.files.vo.request.SearchFileGroupVO">
             DELETE 
               FROM FILES 
              WHERE FILE_GROUP_ID = #{fileGroupId}

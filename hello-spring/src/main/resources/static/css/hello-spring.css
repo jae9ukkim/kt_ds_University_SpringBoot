@@ -229,6 +229,13 @@ div.login {
   background-color: #f3f3f3;
 }
 
+.replies > li > .reply-attach-files {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
 .replies > li > .links {
   display: flex;
   flex-direction: row;
@@ -246,6 +253,39 @@ div.login {
   color: #fff;
   background-color: #0003;
   border-radius: 0.5rem;
+}
+
+.update-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.update-form > .update-button-area {
+  align-self: flex-end;
+  display: inline-flex;
+  gap: 0.625rem;
+}
+
+.update-form > .update-file-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.update-form > .update-file-list > div > input {
+  display: none;
+}
+
+.update-form > .update-file-list > div > input + label {
+  cursor: not-allowed;
+}
+
+.update-form > .update-file-list > div > input:checked + label {
+  color: #f00;
+  text-decoration: line-through;
+  cursor: pointer;
 }
 
 .reply-form {
