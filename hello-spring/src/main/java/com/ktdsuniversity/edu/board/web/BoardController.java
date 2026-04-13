@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.ktdsuniversity.edu.board.enums.ReadType;
 import com.ktdsuniversity.edu.board.service.BoardService;
 import com.ktdsuniversity.edu.board.vo.BoardVO;
+import com.ktdsuniversity.edu.board.vo.request.SearchListVO;
 import com.ktdsuniversity.edu.board.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.board.vo.request.WriteVO;
 import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
@@ -39,10 +40,11 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 
+	// http:192.168.211.11:8080/?pageNo=0&listSize=10&searchType=&searchKeyWord=
 	@GetMapping("/")
-	public String viewListPage(Model model) {
+	public String viewListPage(Model model, SearchListVO searchListVO) {
 		
-		SearchResultVO searchResult = this.boardService.findBoardAll();
+		SearchResultVO searchResult = this.boardService.findBoardAll(searchListVO);
 		
 		// 게시글의 목록을 조회.
 		List<BoardVO> list = searchResult.getResult();
@@ -51,6 +53,7 @@ public class BoardController {
 		
 		model.addAttribute("searchResult", list);
 		model.addAttribute("searchCount", searchCount);
+		model.addAttribute("pagination",searchListVO);
 		
 		return "board/list";
 	}

@@ -1,4 +1,44 @@
 $().ready(function () {
+  $(".search-button").on("click", function () {
+    // ?pageNo=0&listSize=#list-size값&searchType=#search-type값&searchKeyWord=#search-keyword
+    var pageNo = 0;
+    var listSize = $("#list-size").val();
+    var searchType = $("#search-type").val();
+    var searchKeyWord = $("#search-keyword").val();
+    location.href =
+      "/?pageNo=" +
+      pageNo +
+      "&listSize=" +
+      listSize +
+      "&searchType=" +
+      searchType +
+      "&searchKeyWord=" +
+      searchKeyWord;
+  });
+
+  $("#list-size").on("change", function () {
+    //location.href = "/?pageNo=0&listSize=" + $(this).val();
+    $(".search-button").trigger("click");
+  });
+
+  $(".page-navigator")
+    .find("a")
+    .on("click", function () {
+      var pageNo = $(this).data("page-no");
+      var listSize = $("#list-size").val();
+      var searchType = $("#search-type").val();
+      var searchKeyWord = $("#search-keyword").val();
+      location.href =
+        "/?pageNo=" +
+        pageNo +
+        "&listSize=" +
+        listSize +
+        "&searchType=" +
+        searchType +
+        "&searchKeyWord=" +
+        searchKeyWord;
+    });
+
   // ".add-file"을 클릭하면
   $(".attach-files").on("click", ".add-file", function () {
     //   $(".add-file").on("click", function () {
