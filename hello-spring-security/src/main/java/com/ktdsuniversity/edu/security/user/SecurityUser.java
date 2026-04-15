@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ktdsuniversity.edu.members.vo.MembersVO;
@@ -42,8 +43,16 @@ public class SecurityUser implements UserDetails{
 	 */
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		// Spring Security가 체크하는 권한 2가지
+		// 1. ROLE ==> 권한
+		// 2. ACTION (Authority) ==> 생성, 조회, 수정, 삭제, 다운로드, 업로드, ...
+		// Spring Security가 ROLE과 ACTION을 구분하는 방법
+		// ROLE ==> prefix == 'ROLE_롤이름'
+		// ACTION ==> ACTION이름으로 작성 (create, read, modify, delete, download, upload)
+		return this.membersVO.getRoles()
+							 .stream()
+							 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+							 .toList();
 	}
 
 	/**

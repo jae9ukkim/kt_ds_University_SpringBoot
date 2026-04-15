@@ -18,6 +18,4 @@ public interface MembersService {
 
 	SearchResultVO findMembersList();
 
-	MembersVO findMemberByEmailAndPassword(LoginVO loginVO);
-
 }

@@ -7,16 +7,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ktdsuniversity.edu.common.utils.ObjectUtils;
-import com.ktdsuniversity.edu.common.utils.SessionUtils;
 import com.ktdsuniversity.edu.exceptions.HelloSpringApiException;
 import com.ktdsuniversity.edu.files.dao.FilesDao;
 import com.ktdsuniversity.edu.files.helpers.MultipartFileHandler;
 import com.ktdsuniversity.edu.files.vo.request.SearchFileGroupVO;
+import com.ktdsuniversity.edu.members.vo.MembersVO;
 import com.ktdsuniversity.edu.replies.dao.RepliesDao;
 import com.ktdsuniversity.edu.replies.vo.RepliesVO;
 import com.ktdsuniversity.edu.replies.vo.request.CreateVO;
@@ -25,8 +27,6 @@ import com.ktdsuniversity.edu.replies.vo.response.DeleteResultVO;
 import com.ktdsuniversity.edu.replies.vo.response.RecommendResultVO;
 import com.ktdsuniversity.edu.replies.vo.response.SearchResultVO;
 import com.ktdsuniversity.edu.replies.vo.response.UpdateResultVO;
-
-import jakarta.validation.Valid;
 
 @Service
 public class RepliesServiceImpl implements RepliesService {
@@ -84,7 +84,12 @@ public class RepliesServiceImpl implements RepliesService {
 		
 		RepliesVO reply = this.repliesDao.selectReplyByReplyId(replyId);
 		if (ObjectUtils.isNotNull(reply)) {
-			if (SessionUtils.isMineResource(reply.getEmail())) {
+			// Spring Security의 SecurityContext 객체에 접근해서 Authentication 객체를 가지고 온다.
+			Authentication authentication = SecurityContextHolder.getContext() // SecurityContext
+																 .getAuthentication(); // 내가 인증받은 객체
+			MembersVO loginUser = (MembersVO)authentication.getPrincipal();
+			String loginEmail = loginUser.getEmail();
+			if (loginEmail.equals(reply.getEmail())) {
 				throw new HelloSpringApiException(
 						"권한이 부족합니다.", 
 						HttpStatus.BAD_REQUEST.value(), 
@@ -110,7 +115,10 @@ public class RepliesServiceImpl implements RepliesService {
 		
 		RepliesVO reply = this.repliesDao.selectReplyByReplyId(replyId);
 		if (ObjectUtils.isNotNull(reply)) {
-			if (!SessionUtils.isMineResource(reply.getEmail())) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			MembersVO loginUser = (MembersVO)authentication.getPrincipal();
+			String loginEmail = loginUser.getEmail();
+			if (loginEmail.equals(reply.getEmail())) {
 				throw new HelloSpringApiException(
 						"권한이 부족합니다.", 
 						HttpStatus.BAD_REQUEST.value(), 
@@ -133,7 +141,10 @@ public class RepliesServiceImpl implements RepliesService {
 		
 		RepliesVO reply = this.repliesDao.selectReplyByReplyId(updateVO.getReplyId());
 		if (ObjectUtils.isNotNull(reply)) {
-			if (!SessionUtils.isMineResource(reply.getEmail())) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			MembersVO loginUser = (MembersVO)authentication.getPrincipal();
+			String loginEmail = loginUser.getEmail();
+			if (loginEmail.equals(reply.getEmail())) {
 				throw new HelloSpringApiException(
 						"권한이 부족합니다.", 
 						HttpStatus.BAD_REQUEST.value(), 
