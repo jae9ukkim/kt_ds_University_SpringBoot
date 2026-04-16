@@ -137,6 +137,12 @@
          WHERE ID = #{replyId}
     </update>
     
+    <delete id="deleteAllRepliesByArticleId" parameterType="string">
+        DELETE
+          FROM REPLIES
+         WHERE ARTICLE_ID = #{_parameter} 
+    </delete>
+    
 </mapper>
 
 

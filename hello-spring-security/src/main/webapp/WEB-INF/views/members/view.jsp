@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
   <jsp:include page="/WEB-INF/views/templates/header.jsp">
     <jsp:param value="회원 정보 조회 : ${member.email}" name="title" />
   </jsp:include>
@@ -15,10 +16,13 @@
 
       <div class="btn-group">
         <div class="right-align">
-          <a href="/member/update/${member.email}">수정</a>
-          <a href="/member/delete?id=${member.email}">삭제</a>
-          <a href="/delete-me">탈퇴하기</a>
+	      <sec:authentication property="principal.email" var="loginEmail" />
+	      <c:if test="${loginEmail eq member.email}">
+	          <a href="/member/update/${member.email}">수정</a>
+	          <a href="/member/delete?id=${member.email}">삭제</a>
+	          <a href="/delete-me">탈퇴하기</a>
+          </c:if>
         </div>
       </div>
-    </div>
+   </div>
   <jsp:include page="/WEB-INF/views/templates/footer.jsp"></jsp:include>

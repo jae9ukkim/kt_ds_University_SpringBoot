@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ktdsuniversity.edu.common.utils.AuthUtils;
 import com.ktdsuniversity.edu.exceptions.HelloSpringException;
 import com.ktdsuniversity.edu.members.dao.MembersDao;
 import com.ktdsuniversity.edu.members.helpers.SHA256Util;
@@ -48,6 +49,7 @@ public class MembersServiceImpl implements MembersService {
 	@Transactional
 	@Override
 	public MembersVO findMemberByEmail(String email) {
+		
 		MembersVO searchResult = this.membersDao.selectMemberByEmail(email);
 		return searchResult;
 	}
@@ -55,6 +57,7 @@ public class MembersServiceImpl implements MembersService {
 	@Transactional
 	@Override
 	public boolean updateMemberByEmail(UpdateVO updateVO) {
+		
 		int updateCount = this.membersDao.updateMemberByEmail(updateVO);
 		return updateCount == 1;
 	}
@@ -62,6 +65,7 @@ public class MembersServiceImpl implements MembersService {
 	@Transactional
 	@Override
 	public boolean deleteMemberByEmail(String email) {
+		
 		int deleteCount = this.membersDao.deleteMemberByEmail(email);
 		return deleteCount == 1;
 	}

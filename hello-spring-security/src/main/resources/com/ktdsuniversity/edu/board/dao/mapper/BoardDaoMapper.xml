@@ -209,12 +209,16 @@
             parameterType="com.ktdsuniversity.edu.board.vo.request.UpdateVO">
         UPDATE BOARD
 		   SET SUBJECT = #{subject}
-		     , EMAIL = #{email}
 		     , CONTENT = #{content}
 		     , MDFY_DT = SYSDATE
 		     , FILE_GROUP_ID = #{fileGroupId}
 		 WHERE ID = #{id}
     </update>
+    
+    <delete id="deleteBoardAll">
+        DELETE
+          FROM BOARD
+    </delete>
 </mapper>
 
 

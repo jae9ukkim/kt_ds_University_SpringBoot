@@ -25,4 +25,6 @@ public interface RepliesDao {
 
 	int updateReplyByReplyId(UpdateVO updateVO);
 
+	int deleteAllRepliesByArticleId(String articleId);
+
 }
