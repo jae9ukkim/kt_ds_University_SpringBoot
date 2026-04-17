@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -83,9 +85,35 @@ public class HelloSpringConfiguration implements
 	@Bean
 	SecurityFilterChain configureFilterChain(HttpSecurity httpSecurity) {
 		
+		// 상대방이 내 서버로 접속할 수 있도록 허용하기
+		// ==> 내 서버로 접속 가능한 안전한 URL 등록하기
+		httpSecurity.cors(corsConfigurer -> {
+			
+			CorsConfigurationSource source = (httpServletRequest) -> {
+				
+				// 허용할 타 사이트의 도메인을 작성
+				CorsConfiguration config = new CorsConfiguration();
+				// 허용할 타 사이트의 URL
+				// http://192.168.211.11:8085 에서 요청하는 모든 접근(API)들을 허용하겠다
+				config.addAllowedOrigin("http://192.168.211.11:8085");
+				
+				// 허용할 타 사이트의 요청 Method
+				// http://192.168.211.11:8085 에서 POST와 GET으로 요청되는 접근들만 허용하겠다
+				config.addAllowedMethod("POST");
+				config.addAllowedMethod("GET");
+				
+				// 허용할 타 사이트의 요청 HttpHeader
+				// 모든 요청 HttpHeader를 허용하겠다
+				config.addAllowedHeader("*");
+				
+				return config;
+			};
+			corsConfigurer.configurationSource(source);
+		});
+		
 		// CSRF 수정, 댓글 등록 불가
 		// CSRF를 체크하는 SecurityFilter(CsrfFilter)를 무효화
-		httpSecurity.csrf(csrf -> csrf.disable());
+//		httpSecurity.csrf(csrf -> csrf.disable());
 		
 		// UsernamePasswordAuthenticationFilter 수정
 		httpSecurity.formLogin(formLogin -> formLogin

@@ -1,3 +1,9 @@
+# Spring 이외의 Custom 설정
+app:
+  jwt:
+    issuer: hello-spring-security    
+    secret-key: dfgekrjthioq23r90thrfg90h94gmdl3-)_)$sffmo1
+
 # 콘솔 로그 레벨 변경
 #logging:
 #  level:
@@ -29,6 +35,6 @@ spring:
     username: SPRING_BOOT
     password: 1234
   application:
-    name: hello-spring
+    name: hello-spring-security
     
 

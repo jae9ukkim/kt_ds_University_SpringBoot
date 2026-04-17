@@ -5,6 +5,8 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <!-- API / AJAX를 위한 CSRF 토큰 가져오기 -->
+    <sec:csrfMetaTags/>
     <title>${param.title}</title>
     <link rel="stylesheet" type="text/css" href="/css/hello-spring.css" />
     <script type="text/javascript" src="/js/jquery-4.0.0.slim.min.js"></script>
