@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ktdsuniversity.edu.common.utils.ServletUtils;
 import com.ktdsuniversity.edu.members.service.MembersService;
 import com.ktdsuniversity.edu.members.vo.MembersVO;
+import com.ktdsuniversity.edu.members.vo.request.MemberSearchVO;
 import com.ktdsuniversity.edu.members.vo.request.RegistVO;
 import com.ktdsuniversity.edu.members.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.members.vo.response.DuplicateResultVO;
@@ -142,10 +143,11 @@ public class MembersController {
 	// 관리자 계정에서만 볼 수 있도록 개선
 	@PreAuthorize("hasAnyRole('RL-20260414-000001', 'RL-20260414-000002')")
 	@GetMapping("/member")
-	public String viewMembersPage(Model model) {
-		SearchResultVO searchResult = this.membersService.findMembersList();
+	public String viewMembersPage(Model model, MemberSearchVO memberSearchVO) {
+		SearchResultVO searchResult = this.membersService.findMembersList(memberSearchVO);
 		model.addAttribute("searchList", searchResult.getResult());
 		model.addAttribute("searchCount", searchResult.getCount());
+		model.addAttribute("pagination", memberSearchVO);
 		return "members/newlist";
 	}
 	

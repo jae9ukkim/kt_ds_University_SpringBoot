@@ -3,6 +3,11 @@
  */
 $().ready(function () {
   
+  $(".page-navigator > li > a").on("click", function(){
+    var pageNo = $(this).data("page-no");
+    location.href="/member?pageNo="+pageNo;
+  });
+
   // 현재 Location의 pathname을 가지고 온다.
   var pathname = location.pathname;
   // pathname이 "/login"이 아니라면 action을 "/login?go={pathname}" 으로 수정한다.

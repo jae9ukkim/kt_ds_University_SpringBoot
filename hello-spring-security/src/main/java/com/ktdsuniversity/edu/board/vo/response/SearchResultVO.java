@@ -9,8 +9,8 @@ import com.ktdsuniversity.edu.board.vo.BoardVO;
  * 게시글 목록 
  * 게시글 개수
  */
-public class SearchResultVO {
 
+public class SearchResultVO {
 	private List<BoardVO> result;
 	private int count;
 

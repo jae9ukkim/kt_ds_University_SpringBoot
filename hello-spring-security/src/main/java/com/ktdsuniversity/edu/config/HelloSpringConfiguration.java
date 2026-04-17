@@ -89,11 +89,11 @@ public class HelloSpringConfiguration implements
 		
 		// UsernamePasswordAuthenticationFilter 수정
 		httpSecurity.formLogin(formLogin -> formLogin
-								// 로그인 URL을 지정
+								// 로그인 URL을 지정. 로그인 시 이동할 페이지 지정
 								.loginPage("/login")
 								// Login 인증 처리 URL 지정 (UsernameAndPasswordAuthenticationProvider가 실행될 Endpoint)
 								.loginProcessingUrl("/login-provider")
-								// 로그인에 필요한 아이디 파라미터 이름을 "username에서 "email"로 변경한다"
+								// 로그인에 필요한 아이디 파라미터 이름을 "username에서 "email"로 변경한다". /login url의 jsp에 email로 되어있음
 								.usernameParameter("email")
 								// 로그인에 성공하면 뭐할까?
 //								this.membersDao.updateSuccessLogin(loginVO); // 실행해야 한다
