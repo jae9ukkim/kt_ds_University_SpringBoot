@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <jsp:include page="/WEB-INF/views/templates/header.jsp">
     <jsp:param value="게시글 내용 조회 : ${article.id}" name="title"/>
     <jsp:param value="<script type='text/javascript' src='/js/reply.js'></script>" name="scripts"/>
@@ -96,13 +97,16 @@ pageEncoding="UTF-8"%>
         </li>
       </template>
 
-      <c:if test="${sessionScope.__LOGIN_DATA__.email eq article.email}">
-        <div class="btn-group">
-          <div class="right-align">
-              <a href="/update/${article.id}">수정</a>
-              <a href="/delete?id=${article.id}">삭제</a>
-          </div>
-        </div>
-      </c:if>
+      <sec:authorize access="isAuthenticated()" >
+	      <sec:authentication property="principal.email" var="loginEmail" />
+	      <c:if test="${loginEmail eq article.email}">
+	        <div class="btn-group">
+	          <div class="right-align">
+	              <a href="/update/${article.id}">수정</a>
+	              <a href="/delete?id=${article.id}">삭제</a>
+	          </div>
+	        </div>
+	      </c:if>
+      </sec:authorize>
     </div>
  <jsp:include page="/WEB-INF/views/templates/footer.jsp"></jsp:include>

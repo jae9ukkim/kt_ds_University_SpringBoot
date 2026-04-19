@@ -7,12 +7,12 @@ $().ready(function () {
   var pathname = location.pathname;
 
   // pathname이 "/login"이 아니라면 action을 "/login?go={pathname}" 으로 수정한다.
-  if (pathname !== "/login") {
+  if (pathname !== "/login" && pathname !== "/login-provider") {
     pathname = "?go=" + pathname;
   } else {
     pathname = "";
   }
-  $("#loginVO").attr({ action: "/login" + pathname });
+  $("#loginVO").attr({ action: "/login-provider" + pathname });
 
   // 이메일 포커스가 해제되면, 0.15초 이후에 이메일 재검사.
   $("#email").on("blur", function () {

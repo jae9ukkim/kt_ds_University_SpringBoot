@@ -6,7 +6,7 @@
     <jsp:param value="<script type='text/javascript' src='/js/members.js'></script>" name="scripts"/>
 </jsp:include>
     <h1>로그인</h1>
-    <form:form modelAttribute="loginVO" method="post" action="/login">
+    <form:form modelAttribute="loginVO" method="post" action="/login-provider">
       <c:if test="${not empty errorMessage}">
         <div class="validation-error">${errorMessage}</div>
       </c:if>

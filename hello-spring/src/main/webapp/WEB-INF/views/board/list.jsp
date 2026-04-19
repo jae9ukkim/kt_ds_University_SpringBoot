@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!-- /templates/header.jsp import -->
 <jsp:include page="/WEB-INF/views/templates/header.jsp">
@@ -45,13 +46,13 @@ pageEncoding="UTF-8"%>
               </c:choose>
             </tbody>
         </table>
-        <c:if test="${not empty sessionScope.__LOGIN_DATA__}">
           <div class="btn-group">
             <div class="right-align">
-              <a href="/write">새로운 게시글 작성</a>
+              <sec:authorize access="isAuthenticated()">
+                <a href="/write">새로운 게시글 작성</a>
+              </sec:authorize>
             </div>
           </div>
-        </c:if>
 
         <div class="search-box">
           <select name="" id="list-size">

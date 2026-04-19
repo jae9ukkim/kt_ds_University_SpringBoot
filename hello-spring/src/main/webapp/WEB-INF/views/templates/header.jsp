@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>    
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -13,22 +14,20 @@
   <body>
     <div class="wrapper">
       <div class="header">
-        <c:choose>
-          <c:when test="${empty sessionScope.__LOGIN_DATA__}">
+          <sec:authorize access="!isAuthenticated()">
             <!-- 로그인 안했을 때의 링크 시작 -->
             <a href="/regist">회원가입</a>
             <a href="/login">로그인</a>
             <!-- 로그인 안했을 때의 링크 끝 -->
-          </c:when>
-          <c:otherwise>
-            <!-- 로그인 했을 때의 링크 시작 -->
-            <div class="member-info" data-email="${sessionScope.__LOGIN_DATA__.email}">
-              ${sessionScope.__LOGIN_DATA__.name} (${sessionScope.__LOGIN_DATA__.email})
+          </sec:authorize>
+          <sec:authorize access="isAuthenticated()">
+            <!-- 로그인 했을 때의 링크 시작 -->            
+            <div class="member-info" data-email="<sec:authentication property='principal.name'/>">
+            <sec:authentication property="principal.name"/>(<sec:authentication property='principal.email'/>)
             </div>
-            <a href="/member/view/${sessionScope.__LOGIN_DATA__.email}">마이페이지</a>
+            <a href="/member/view/<sec:authentication property='principal.email'/>">마이페이지</a>
             <a href="/logout">로그아웃</a>
             <!-- 로그인 했을 때의 링크 끝 -->
-          </c:otherwise>
-        </c:choose>
+          </sec:authorize>
         
       </div>

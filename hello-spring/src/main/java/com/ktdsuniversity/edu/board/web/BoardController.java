@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +22,11 @@ import com.ktdsuniversity.edu.board.vo.request.SearchListVO;
 import com.ktdsuniversity.edu.board.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.board.vo.request.WriteVO;
 import com.ktdsuniversity.edu.board.vo.response.SearchResultVO;
-import com.ktdsuniversity.edu.exceptions.HelloSpringException;
 import com.ktdsuniversity.edu.members.vo.MembersVO;
 
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 
 @Controller
@@ -60,20 +59,20 @@ public class BoardController {
 	}
 	
 	// 게시글 등록 화면 보여주는 EndPoint
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/write")
 	public String viewWritePage() {
 		return "board/write";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/write")
 	public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model, Authentication authentication) {
 		// bindingResult @Valid의 결과를 받아오는 파라미터
 		// BindingResult 반드시 @Valid 파라미터 이후에 작성
 		// 중간에 다른 것이 들어가면 안됨.
-		
-//	    writeVO.setEmail(authentication.getPrincipal());
-	    
-		// 사용자의 입력값을 검증했을 때, 에러가 있다면
+
+	    // 사용자의 입력값을 검증했을 때, 에러가 있다면
 		if(bindingResult.hasErrors()) {
 			// 브라우저에게 "board/write" 페이지를 보여주도록 하고
 			// 해당 페이지에 사용자가 입력한 값을 전달한다.
@@ -81,6 +80,8 @@ public class BoardController {
 			return "board/write";
 		}
 		
+		MembersVO loginUser = (MembersVO)authentication.getPrincipal();		
+		writeVO.setEmail(loginUser.getEmail());
 		
 		logger.debug(writeVO.getSubject());
 		logger.debug(writeVO.getEmail());
@@ -112,6 +113,7 @@ public class BoardController {
 		return "board/view";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/delete")
 	public String doDeleteAction(@RequestParam String id) {
 		boolean deleteResult = this.boardService.deleteBoardById(id);
@@ -120,25 +122,23 @@ public class BoardController {
 		return "redirect:/";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/update/{articleId}")
-	public String viewUpdatePage(@PathVariable String articleId, Model model, @SessionAttribute("__LOGIN_DATA__") MembersVO loginMember) {
+	public String viewUpdatePage(@PathVariable String articleId, Model model) {
 		
 		BoardVO data = this.boardService.findBoardByArticleId(articleId, ReadType.UPDATE);
 		model.addAttribute("article", data);
 		
-		// TODO 게시글의 이메일과 세션의 이메일을 비교할 때는
-		// 항상 ServiceImpl에서 수행한다.
-		if(!data.getEmail().equals(loginMember.getEmail())) {
-			throw new HelloSpringException("잘못된 접근입니다.", "errors/403");
-		}
 		
 		return "board/update";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/update/{articleId}")
-	public String doUpdateAction(@PathVariable String articleId, UpdateVO updateVO, @SessionAttribute("__LOGIN_DATA__") MembersVO loginMember) {
-		
-		updateVO.setEmail(loginMember.getEmail());
+	public String doUpdateAction(@PathVariable String articleId, UpdateVO updateVO, Authentication authentication) {
+		// TODO email이 잘 들어오는지 확인
+	    MembersVO loginUser = (MembersVO)authentication.getPrincipal();
+		updateVO.setEmail(loginUser.getEmail());
 		
 		updateVO.setId(articleId);
 		boolean updateResult = this.boardService.updateBoardByArticleId(updateVO);

@@ -2,9 +2,11 @@ package com.ktdsuniversity.edu.board.security.authenticate.service;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import com.ktdsuniversity.edu.members.helpers.SHA256Util;
 
+@Component
 public class SecurityPasswordEncoder implements PasswordEncoder{
 
     @Override

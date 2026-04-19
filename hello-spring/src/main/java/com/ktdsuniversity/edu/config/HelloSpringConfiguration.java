@@ -23,7 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //   1. spring.mvc.view.prefix, spring.mvc.view.suffix
 //   2. src/main/resources/static 경로 사용 불가능.
 @EnableWebMvc
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableMethodSecurity
 public class HelloSpringConfiguration implements 
 	// WebMvc 설정을 위한 Configuration
@@ -65,6 +65,8 @@ public class HelloSpringConfiguration implements
     
     @Bean
     SecurityFilterChain configureFilterChain(HttpSecurity httpSecurity) {
+        
+        httpSecurity.csrf(csrf -> csrf.disable());
         
         httpSecurity.formLogin(formLogin -> formLogin
                                             .loginPage("/login")

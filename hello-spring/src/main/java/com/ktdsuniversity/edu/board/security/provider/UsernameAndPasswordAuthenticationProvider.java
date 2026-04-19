@@ -1,6 +1,7 @@
 package com.ktdsuniversity.edu.board.security.provider;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -10,14 +11,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import com.ktdsuniversity.edu.board.security.authenticate.service.SecurityPasswordEncoder;
 import com.ktdsuniversity.edu.board.security.user.SecurityUser;
 import com.ktdsuniversity.edu.members.vo.MembersVO;
 
+@Component
 public class UsernameAndPasswordAuthenticationProvider implements AuthenticationProvider {
     
+    @Autowired
     private UserDetailsService userDetailService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
