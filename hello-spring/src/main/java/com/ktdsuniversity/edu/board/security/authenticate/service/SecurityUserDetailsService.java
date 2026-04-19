@@ -20,13 +20,14 @@ public class SecurityUserDetailsService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        
+        // 아이디로 회원정보 DB에서 조회
         MembersVO loadedUser = this.membersDao.selectMemberByEmail(username);
         
         if(loadedUser == null) {
             throw new UsernameNotFoundException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
         
+        // 권한 DB에서 조회
         List<String> userRole = this.membersDao.selectMemberRolesByEmail(username);
         loadedUser.setRoles(userRole);
         

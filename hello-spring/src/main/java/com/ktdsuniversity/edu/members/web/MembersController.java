@@ -20,14 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ktdsuniversity.edu.common.utils.ServletUtils;
 import com.ktdsuniversity.edu.members.service.MembersService;
 import com.ktdsuniversity.edu.members.vo.MembersVO;
-import com.ktdsuniversity.edu.members.vo.request.LoginVO;
 import com.ktdsuniversity.edu.members.vo.request.RegistVO;
 import com.ktdsuniversity.edu.members.vo.request.UpdateVO;
 import com.ktdsuniversity.edu.members.vo.response.DuplicateResultVO;
 import com.ktdsuniversity.edu.members.vo.response.SearchResultVO;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -56,7 +53,10 @@ public class MembersController {
 	}
 	
 	@GetMapping("/regist")
-	public String viewRegistPage() {
+	public String viewRegistPage(Authentication authentication) {
+	    if(authentication != null) {
+	        return "redirect:/";
+	    }
 		
 		return "members/regist";
 	}
@@ -83,6 +83,7 @@ public class MembersController {
 	 * /member/update/사용자아이디 ==> 회원 정보 수정 하기
 	 * /member/delete?id=사용자아이디 ==> 회원 정보 삭제 하기
 	 */
+	@PreAuthorize("isAuthenticated() and #email == authentication.principal.email")
 	@GetMapping("/member/view/{email}")
 	public String viewMemberDetailPage(@PathVariable String email, Model model) {
 		
@@ -92,6 +93,7 @@ public class MembersController {
 		return "members/view";
 	}
 	
+	@PreAuthorize("isAuthenticated() and #email == authentication.principal.email")
 	@GetMapping("/member/update/{email}")
 	public String viewUpdateMemberPage(@PathVariable String email, Model model) {
 		
@@ -101,6 +103,7 @@ public class MembersController {
 		return "members/update";
 	}
 	
+	@PreAuthorize("isAuthenticated() and #email == authentication.principal.email")
 	@PostMapping("/member/update/{email}")
 	public String doUpdateMemberAction(@PathVariable String email, UpdateVO updateVO) {
 		
@@ -111,6 +114,7 @@ public class MembersController {
 		return "redirect:/member/view/" + email;
 	}
 	
+	@PreAuthorize("isAuthenticated() and #email == authentication.principal.email")
 	@GetMapping("/member/delete")
 	public String doDeleteMemberAction(@RequestParam String email) {
 		
@@ -126,7 +130,7 @@ public class MembersController {
 	// 						 : 회원 수 출력
 	// 						 : 회원 없을 때, "등록된 회원이 없습니다" 출력
 	// 						 : 목록 아래에는 "새로운 회원 등록" 링크 추가
-	
+	@PreAuthorize("hasRole('RL-20260419-000002')")
 	@GetMapping("/member")
 	public String viewMembersListPage(Model model) {
 		
@@ -148,30 +152,6 @@ public class MembersController {
 		return "members/login";
 	}
 
-//	@PostMapping("/login")
-//	public String doLoginAction(@Valid @ModelAttribute LoginVO loginVO, BindingResult bindingResult, Model model, @RequestParam(required = false, defaultValue = "/") String go, HttpServletRequest request) {
-//		if(bindingResult.hasErrors()) {
-//			model.addAttribute("loginData", loginVO);
-//			return "members/login";
-//		}
-//		
-//		String userIp = request.getRemoteAddr();
-//		loginVO.setIp(userIp);
-//		
-//		MembersVO member = this.membersService.findMemberByEmailAndPassword(loginVO);
-//		
-//		// 서버의 세션을 삭제한다. - 로그아웃
-//		request.getSession().invalidate();
-//		
-//		// request.getSession(); HttpRequestHeader로 전달된 JSESSIONID의 객체를 반환.
-//		// request.getSession(true); 기존 JSESSIONID로 발급된 세션객체는 버리고, 새로운 ID의 세션객체를 생성 후 반환
-//		HttpSession session = request.getSession(true);
-//		
-//		session.setAttribute("__LOGIN_DATA__", member);
-//		
-//		return "redirect:" + go;
-//	}
-	
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/logout")
 	public String doLogoutAction(Authentication authentication) {

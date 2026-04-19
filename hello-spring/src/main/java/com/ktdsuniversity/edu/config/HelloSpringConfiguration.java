@@ -30,33 +30,6 @@ public class HelloSpringConfiguration implements
 	// @EnableWebMvc Annotation 에서 적용하는 기본 설정들을 변경하기 위함
 	WebMvcConfigurer {
 	
-	// Interceptor 등록 및 대상 URL 지정
-//	@Override
-//	public void addInterceptors(InterceptorRegistry registry) {
-//		SessionInterceptor sessionInterceptor = new SessionInterceptor();
-//		
-//		registry.addInterceptor(sessionInterceptor) // bean에 등록
-//				.addPathPatterns("/**") // 모든 URL을 대상으로 SessionInterceptor(세션 체크)를 수행해라!
-//				.excludePathPatterns("/regist/check/duplicate/**", 
-//						"/regist", // 회원가입 페이지 & 처리
-//						"/login", // 로그인 페이지 & 처리
-//						"/js/**", // static resources
-//						"/css/**", // static resources
-//						"/image/**", // static resources
-//						"/", // 게시글 목록 조회
-//						"/view/**", // 게시글 내용 조회
-//						"/file/**", // 첨부파일 다운로드
-//						"/error" // 에러 내용이 보여지는 페이지
-//						) // sessionInterceptor가 적용되지 않을 URL 명시
-//				;
-//		IllegalAccessInterceptor illegalAccessInterceptor = new IllegalAccessInterceptor();
-//		registry.addInterceptor(illegalAccessInterceptor)
-//				.addPathPatterns("/regist/check/duplicate/**", // 회원가입 이메일 중복검사
-//								 "/regist", // 회원가입 페이지 & 처리
-//								 "/login") // 로그인 페이지 & 처리
-//				;
-//	}
-	
     @Autowired
     private AuthenticationSuccessHandler successHandler;
     
@@ -66,13 +39,19 @@ public class HelloSpringConfiguration implements
     @Bean
     SecurityFilterChain configureFilterChain(HttpSecurity httpSecurity) {
         
-        httpSecurity.csrf(csrf -> csrf.disable());
+        // httpSecurity.csrf(csrf -> csrf.disable());
         
+        // UsernamePasswordAuthenticationFilter 수정
         httpSecurity.formLogin(formLogin -> formLogin
+                                            // 로그인 URL을 지정. 로그인 시 이동할 페이지 지정
                                             .loginPage("/login")
+                                            // Login 인증 처리 URL 지정 (UsernameAndPasswordAuthenticationProvider가 실행될 Endpoint)
                                             .loginProcessingUrl("/login-provider")
+                                            // 로그인에 필요한 아이디 파라미터 이름을 username에서 email로 변경
                                             .usernameParameter("email")
+                                            // 로그인 성공 처리 handler
                                             .successHandler(successHandler)
+                                            // 로그인에 실패 처리 handler
                                             .failureHandler(failureHandler));
         
         return httpSecurity.build();

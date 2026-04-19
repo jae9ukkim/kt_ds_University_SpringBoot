@@ -136,7 +136,7 @@ public class BoardController {
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/update/{articleId}")
 	public String doUpdateAction(@PathVariable String articleId, UpdateVO updateVO, Authentication authentication) {
-		// TODO email이 잘 들어오는지 확인
+
 	    MembersVO loginUser = (MembersVO)authentication.getPrincipal();
 		updateVO.setEmail(loginUser.getEmail());
 		

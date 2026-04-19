@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ktdsuniversity.edu.common.utils.AuthUtils;
 import com.ktdsuniversity.edu.common.utils.ObjectUtils;
 import com.ktdsuniversity.edu.common.utils.SessionUtils;
 import com.ktdsuniversity.edu.config.HelloSpringApiException;
@@ -79,7 +80,10 @@ public class RepliesServiceImpl implements RepliesService {
 		// 조회했는데 이미 지워진 경우
 		if(ObjectUtils.isNotNull(insertResult)) {
 			
-			if(!SessionUtils.isMineResource(insertResult.getEmail())) {
+		    String loginEmail = AuthUtils.getUsername();
+		    boolean isAdminAccount = AuthUtils.hasAnyRole("RL-20260419-000001", "RL-20260419-000002");
+		    
+			if(isAdminAccount || loginEmail.equals(replyId) ) {
 				throw new HelloSpringApiException("권한이 부족합니다."
 						, HttpStatus.BAD_REQUEST.value(), "자신의 댓글은 추천할 수 없습니다.");
 			}
@@ -103,7 +107,10 @@ public class RepliesServiceImpl implements RepliesService {
 	public boolean deleteRecommendByReplyId(String replyId) {
 		
 		RepliesVO reply = this.repliesDao.selectReplyByReplyId(replyId);
-		if(ObjectUtils.isNotNull(reply)) {
+		String loginEmail = AuthUtils.getUsername();
+		boolean isAdminAccount  = AuthUtils.hasAnyRole("RL-20260419-000001", "RL-20260419-000002");
+		
+		if(!isAdminAccount && !loginEmail.equals(reply)) {
 			
 			if(!SessionUtils.isMineResource(reply.getEmail())) {
 				throw new HelloSpringApiException("권한이 부족합니다."
@@ -126,10 +133,13 @@ public class RepliesServiceImpl implements RepliesService {
 		RepliesVO reply = this.repliesDao.selectReplyByReplyId(updateVO.getReplyId());
 		if(ObjectUtils.isNotNull(reply)) {
 			
-			if(!SessionUtils.isMineResource(reply.getEmail())) {
-				throw new HelloSpringApiException("권한이 부족합니다."
-						, HttpStatus.BAD_REQUEST.value(), "자신의 댓글이 아닙니다.");
-			}
+		    String loginEmail = AuthUtils.getUsername();
+		    boolean isAdminAccount = AuthUtils.hasAnyRole("RL-20260419-000001", "RL-20260419-000002");
+		    
+		    if(!isAdminAccount && !loginEmail.equals(reply.getEmail())) {
+		        throw new HelloSpringApiException("권한이 부족합니다.", HttpStatus.BAD_REQUEST.value(), "자신의 댓글이 아닙니다.");
+		    }
+
 		}
 		
 		updateVO.setFileGroupId(reply.getFileGroupId());

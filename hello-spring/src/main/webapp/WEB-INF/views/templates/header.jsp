@@ -6,6 +6,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <sec:csrfMetaTags/>
     <title>${param.title}</title>
     <script type="text/javascript" src="/js/jquery-4.0.0.slim.min.js"></script>
     ${param.scripts}
@@ -22,7 +23,7 @@
           </sec:authorize>
           <sec:authorize access="isAuthenticated()">
             <!-- 로그인 했을 때의 링크 시작 -->            
-            <div class="member-info" data-email="<sec:authentication property='principal.name'/>">
+            <div class="member-info" data-email="<sec:authentication property='principal.email'/>">
             <sec:authentication property="principal.name"/>(<sec:authentication property='principal.email'/>)
             </div>
             <a href="/member/view/<sec:authentication property='principal.email'/>">마이페이지</a>

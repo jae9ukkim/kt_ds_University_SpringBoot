@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <jsp:include page="/WEB-INF/views/templates/header.jsp">
     <jsp:param value="회원정보 수정" name="title"/>    
 </jsp:include>
     <h1>회원가입</h1>
     <form action="/member/update/${member.email}" method="post">
+      <sec:csrfInput/>
       <div class="grid regist">
         <!-- <label for="email">이메일: </label>
         <input
