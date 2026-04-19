@@ -1,5 +1,7 @@
 package com.ktdsuniversity.edu.members.vo;
 
+import java.util.List;
+
 public class MembersVO {
 
 	private String email;
@@ -15,6 +17,8 @@ public class MembersVO {
 	private String latestLoginFailDate;
 	private String blockYn;
 	private String fileGroupId;
+	
+	private List<String> roles;
 	
 	public String getEmail() {
 		return this.email;
@@ -93,6 +97,12 @@ public class MembersVO {
 	}
 	public void setBlockYn(String blockYn) {
 		this.blockYn = blockYn;
-	}	
+	}
+    public List<String> getRoles() {
+        return this.roles;
+    }
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }	
 	
 }

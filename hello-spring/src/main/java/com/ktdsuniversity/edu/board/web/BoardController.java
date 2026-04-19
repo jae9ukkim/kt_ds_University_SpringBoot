@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -65,14 +66,12 @@ public class BoardController {
 	}
 	
 	@PostMapping("/write")
-	public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model, @SessionAttribute("__LOGIN_DATA__") MembersVO loginMember) {
+	public String doWriteAction(@Valid @ModelAttribute WriteVO writeVO, BindingResult bindingResult, Model model, Authentication authentication) {
 		// bindingResult @Valid의 결과를 받아오는 파라미터
 		// BindingResult 반드시 @Valid 파라미터 이후에 작성
 		// 중간에 다른 것이 들어가면 안됨.
 		
-	    // 로그인 데이터(__LOGIN_DATA__)에서 로그인 한 사용자의 이메일을 가져온다.	    
-	    
-	    writeVO.setEmail(loginMember.getEmail());
+//	    writeVO.setEmail(authentication.getPrincipal());
 	    
 		// 사용자의 입력값을 검증했을 때, 에러가 있다면
 		if(bindingResult.hasErrors()) {
@@ -147,4 +146,6 @@ public class BoardController {
 		
 		return "redirect:/view/" + articleId;
 	}
+	
+	
 }
