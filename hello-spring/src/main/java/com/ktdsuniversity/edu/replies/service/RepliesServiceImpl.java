@@ -110,7 +110,7 @@ public class RepliesServiceImpl implements RepliesService {
 		String loginEmail = AuthUtils.getUsername();
 		boolean isAdminAccount  = AuthUtils.hasAnyRole("RL-20260419-000001", "RL-20260419-000002");
 		
-		if(!isAdminAccount && !loginEmail.equals(reply)) {
+		if(!isAdminAccount && !loginEmail.equals(reply.getEmail())) {
 			
 			if(!SessionUtils.isMineResource(reply.getEmail())) {
 				throw new HelloSpringApiException("권한이 부족합니다."

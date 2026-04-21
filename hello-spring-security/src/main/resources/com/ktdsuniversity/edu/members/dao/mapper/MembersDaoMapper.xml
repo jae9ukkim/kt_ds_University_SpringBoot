@@ -109,4 +109,24 @@
 		                        WHERE EMAIL = #{_parameter} )
 		 CONNECT BY PRIOR ROLE_ID = TOP_ROLE_ID
     </select>
+    
+    <insert id="insertNewOAuthMember" parameterType="com.ktdsuniversity.edu.members.vo.OAuthMemberVO">
+        INSERT INTO OAUTH_MEMBERS
+		( REGISTRATION_ID
+		, EMAIL
+		, NAME)
+		VALUES
+		( #{registrationId}
+		, #{email}
+		, #{name})
+    </insert>
+    
+    <select id="selectOAuthMemberByEmailAndRegistrationId" parameterType="com.ktdsuniversity.edu.members.vo.OAuthMemberVO" resultType="com.ktdsuniversity.edu.members.vo.OAuthMemberVO">
+        SELECT REGISTRATION_ID
+		     , EMAIL
+		     , NAME
+		  FROM OAUTH_MEMBERS
+		 WHERE EMAIL = #{email}
+		   AND REGISTRATION_ID = #{registrationId}
+    </select>
 </mapper>
