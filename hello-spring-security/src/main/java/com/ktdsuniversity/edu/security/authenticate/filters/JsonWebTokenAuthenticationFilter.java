@@ -14,6 +14,7 @@ import com.ktdsuniversity.edu.common.utils.StringUtils;
 import com.ktdsuniversity.edu.security.providers.JsonWebTokenAuthenticationProvider;
 import com.ktdsuniversity.edu.security.user.SecurityUser;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,7 +58,20 @@ public class JsonWebTokenAuthenticationFilter extends OncePerRequestFilter{
 			// jsonWebToken 이 있을 때만 실행 
 			if(!StringUtils.isEmpty(jsonWebToken)) {
 				//JWT를 복호화시켜 email을 가져온다.
-				String email = this.jsonWebTokenAuthenticationProvider.decryptJsonWebToken(jsonWebToken);
+				String email = null;
+				try {
+					email = this.jsonWebTokenAuthenticationProvider.decryptJsonWebToken(jsonWebToken);
+				}
+				catch (JwtException je) {
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("application/json");
+					
+					PrintWriter writer;
+					writer = response.getWriter();
+					writer.append("{ \"error\": \"인증이 필요하거나 잘못된 권한입니다.\" }");
+					writer.flush();
+					return;
+				}
 				
 				// email을 이용해 사용자의 정보와 권한을 조회한다.
 				UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
