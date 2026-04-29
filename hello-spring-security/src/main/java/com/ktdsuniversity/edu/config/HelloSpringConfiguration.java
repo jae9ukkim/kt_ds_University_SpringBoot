@@ -152,11 +152,16 @@ public class HelloSpringConfiguration implements
 				// 허용할 타 사이트의 URL
 				// http://192.168.211.11:8085 에서 요청하는 모든 접근(API)들을 허용하겠다
 				config.addAllowedOrigin("http://192.168.211.11:8085");
+				// http://192.168.211.11:5173 (Vite React) 에서 요청하는 모든 접근(API)들을 허용하겠다!
+				config.addAllowedOrigin("http://192.168.211.26:3000");
+				config.addAllowedOrigin("http://localhost:3000");
 				
 				// 허용할 타 사이트의 요청 Method
 				// http://192.168.211.11:8085 에서 POST와 GET으로 요청되는 접근들만 허용하겠다
 				config.addAllowedMethod("POST");
 				config.addAllowedMethod("GET");
+				config.addAllowedMethod("PUT");
+				config.addAllowedMethod("DELETE");
 				
 				// 허용할 타 사이트의 요청 HttpHeader
 				// 모든 요청 HttpHeader를 허용하겠다
