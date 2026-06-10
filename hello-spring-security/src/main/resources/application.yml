@@ -26,13 +26,13 @@ spring:
         registration:
           # 요청하는 oauth 서비스를 식별할 수 있는 아이디 작성(임의의 명칭)
           google:
-            client-id: 
+            client-id: 309215134380-6imqti34k50u8agauch86frbgsvmn7uc.apps.googleusercontent.com
             client-secret: 
             client-name: GOOGLE
             scope: profile,email
           naver:
             # 인증 아이디와 인증 키 설정
-            client-id: 
+            client-id: MZIxb8vTRN6kqOFsUWkl
             client-secret: 
             # naver oauth를 구분지을 이름(코드에서)
             client-name: Naver

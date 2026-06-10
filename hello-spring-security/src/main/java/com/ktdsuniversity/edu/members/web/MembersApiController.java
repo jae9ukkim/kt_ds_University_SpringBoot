@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -78,6 +79,16 @@ public class MembersApiController {
 		boolean createResult = this.membersService.createNewMember(registVO);
 		logger.debug("회원 가입 결과? {}", createResult);
 		return Map.of("result", createResult);
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@ResponseBody
+	@GetMapping("/api/member/me")
+	public MembersVO getMyInfo(Authentication authentication) {
+		MembersVO membersVO = (MembersVO)authentication.getPrincipal();
+		String email = membersVO.getEmail();
+		
+		return this.membersService.findMemberByEmail(email);
 	}
 	
 	@PreAuthorize("isAuthenticated() and #email == authentication.principal.email") // 메소드의 파라미터로 전달된 값(email)과 authentication에 할당된 email값을 비교한다.
