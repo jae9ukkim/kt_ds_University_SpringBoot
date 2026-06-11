@@ -3,11 +3,15 @@ package com.example.userservice.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.userservice.dao.UserDao;
+import com.example.userservice.utils.Sha;
 import com.example.userservice.vo.RegistUserVO;
 import com.example.userservice.vo.ResponseUserVO;
+import com.example.userservice.vo.UserDetailsImpl;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,20 +21,47 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public ResponseUserVO createNewUser(RegistUserVO registUserVO) {
-		// TODO 회원 가입 서비스 코드 작성.
+		// 회원 가입 서비스 코드 작성.
+		String salt = Sha.generateSalt();
+		String password = registUserVO.getPwd();
+		String encryptedPassword = Sha.getEncrypt(password, salt);
+		registUserVO.setPwd(encryptedPassword);
+		registUserVO.setSalt(salt);
+		
+		int createCount = this.userDao.insertNewUser(registUserVO);
+		if(createCount > 0) {
+			return this.userDao.selectOneUserByUserId(registUserVO.getUserId());
+		}
 		return null;
 	}
 
 	@Override
 	public List<ResponseUserVO> fetchAllUsers() {
-		// TODO 전체 사용자 조회 코드 작성.
-		return null;
+		// 전체 사용자 조회 코드 작성.
+		return this.userDao.selectAllUsers();
 	}
 
 	@Override
 	public ResponseUserVO fetchOneUser(String userId) {
-		// TODO 회원 정보 조회 코드 작성.
-		return null;
+		// 회원 정보 조회 코드 작성.
+		return this.userDao.selectOneUserByUserId(userId);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		  ResponseUserVO userVO = this.userDao.selectOneUserByEmail(username);
+		  if (userVO == null) {
+		    throw new UsernameNotFoundException(username);
+		  }
+
+		  return new UserDetailsImpl(userVO);
+
+	}
+
+	@Override
+	public ResponseUserVO fetchOneUserByEmail(String email) {
+		return this.userDao.selectOneUserByEmail(email);
+
 	}
 
 }

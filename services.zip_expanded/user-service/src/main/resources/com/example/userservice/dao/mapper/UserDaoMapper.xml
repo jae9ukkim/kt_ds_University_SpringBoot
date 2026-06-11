@@ -6,7 +6,7 @@
     
     <insert id="insertNewUser" parameterType="RegistUserVO">
         <selectKey order="BEFORE" resultType="string" keyProperty="userId">
-            SELECT 'USR-' || TO_CHAR(SYSDATE, 'YYYYMMDD-') || LPAD(SEQ_USERS_PK.NEXTVAL, 6, '0’)
+            SELECT 'USR-' || TO_CHAR(SYSDATE, 'YYYYMMDD-') || LPAD(SEQ_USERS_PK.NEXTVAL, 6, '0')
               FROM DUAL
         </selectKey>
         
@@ -46,6 +46,17 @@
              , NAME
              , CREATED_AT
           FROM USERS
+	</select>
+	
+	<select id="selectOneUserByEmail" parameterType="string" resultType="ResponseUserVO">
+	  SELECT USER_ID
+	       , EMAIL
+	       , PWD
+	       , SALT
+	       , NAME
+	       , CREATED_AT
+	    FROM USERS 
+	   WHERE EMAIL = #{_parameter}
 	</select>
 	    
 </mapper>

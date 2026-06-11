@@ -15,4 +15,6 @@ public interface UserDao {
 	ResponseUserVO selectOneUserByUserId(String userId);
 	
 	List<ResponseUserVO> selectAllUsers();
+
+	ResponseUserVO selectOneUserByEmail(String email);
 }

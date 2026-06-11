@@ -17,14 +17,15 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public ResponseOrderVO createNewOrder(RequestOrderVO requestOrderVO) {
-		// TODO 주문 생성 코드 작성.
-		return null;
+		// 주문 생성 코드 작성.
+		this.orderDao.insertNewOrder(requestOrderVO);
+		return this.orderDao.selectOneOrderByOrderId(requestOrderVO.getOrderId());
 	}
 
 	@Override
 	public List<ResponseOrderVO> fetchAllOrdersByUserId(String userId) {
-		// TODO 사용자별 주문 내역 조회 코드 작성.
-		return null;
+		// 사용자별 주문 내역 조회 코드 작성.
+		return this.orderDao.selectAllOrdersByUserId(userId);
 	}
 
 

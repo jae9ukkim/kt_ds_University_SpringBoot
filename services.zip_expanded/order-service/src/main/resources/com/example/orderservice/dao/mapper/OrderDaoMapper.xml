@@ -7,7 +7,7 @@
     <insert id="insertNewOrder"
             parameterType="RequestOrderVO">
         <selectKey resultType="string" order="BEFORE" keyProperty="orderId">
-            SELECT 'ORD-' || TO_CHAR(SYSDATE, 'YYYYMMDD-') || LPAD(SEQ_ORDERS_PK.NEXTVAL, 6, '0’)
+            SELECT 'ORD-' || TO_CHAR(SYSDATE, 'YYYYMMDD-') || LPAD(SEQ_ORDERS_PK.NEXTVAL, 6, '0')
               FROM DUAL
         </selectKey>
         INSERT INTO ORDERS 

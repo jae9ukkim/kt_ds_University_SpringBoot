@@ -5,7 +5,7 @@ spring:
   cloud:
     gateway:
       server:
-        webmvc:
+        webflux:
           routes:
           - id: first-service
             predicates:
@@ -21,6 +21,34 @@ spring:
             filters:
             - AddRequestHeader=s-request, 202606101531
             - AddResponseHeader=api-response, token value
+          - id: user-service-login
+            uri: lb://USER-SERVICE
+            predicates:
+            - Path=/user-service/login
+            filters:
+            - RewritePath=/user-service/login, /login
+          - id: user-service-regist
+            uri: lb://USER-SERVICE
+            predicates:
+            - Path=/user-service/users
+            - Method=POST
+          - id: user-service
+            predicates:
+            - Path=/user-service/**
+            filters:
+            - AuthorizationHeaderFilter            
+            uri: lb://USER-SERVICE
+          - id: item-service
+            predicates:
+            - Path=/item-service/**
+            uri: lb://ITEM-SERVICE
+          - id: order-service
+            predicates:
+            - Path=/order-service/**
+            filters:
+            - AuthorizationHeaderFilter
+            uri: lb://ORDER-SERVICE
+              
 
 server:
   port: 8000
@@ -33,3 +61,6 @@ eureka:
       defaltZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+    
+token:
+  secret: very-long-long-user-token-secret-202507101234

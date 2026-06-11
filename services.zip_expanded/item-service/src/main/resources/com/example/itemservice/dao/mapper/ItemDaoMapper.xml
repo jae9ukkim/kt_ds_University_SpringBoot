@@ -17,7 +17,7 @@
     <insert id="insertItem"
             parameterType="CreateItemVO">
         <selectKey order="BEFORE" resultType="string" keyProperty="itemId">
-            SELECT 'ITM-' || TO_CHAR(SYSDATE, 'YYYYMMDD-') || LPAD(SEQ_ITEMS_PK.NEXTVAL, 6, '0’)
+            SELECT 'ITM-' || TO_CHAR(SYSDATE, 'YYYYMMDD-') || LPAD(SEQ_ITEMS_PK.NEXTVAL, 6, '0')
               FROM DUAL
         </selectKey>
         

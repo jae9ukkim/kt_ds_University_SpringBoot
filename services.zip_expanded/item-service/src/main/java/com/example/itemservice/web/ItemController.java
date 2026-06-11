@@ -1,8 +1,11 @@
 package com.example.itemservice.web;
 
+import com.example.itemservice.exceptions.ItemException;
+import com.example.itemservice.exceptions.handler.ItemExceptionHandler;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,19 +24,29 @@ import jakarta.validation.Valid;
 @RequestMapping("/item-service")
 public class ItemController {
 
+	private final ItemExceptionHandler itemExceptionHandler;
 	@Autowired
 	private ItemService itemService;
 
+	ItemController(ItemExceptionHandler itemExceptionHandler) {
+		this.itemExceptionHandler = itemExceptionHandler;
+	}
+
 	@GetMapping("/items")
 	public ResponseEntity<List<ResponseItemVO>> getAllItems() {
-		// TODO 상품 조회 코드 작성.
-		return null;
+		// 상품 조회 코드 작성.
+		List<ResponseItemVO> itemList = this.itemService.fetchAllItems();
+		return new ResponseEntity<List<ResponseItemVO>>(itemList, HttpStatusCode.valueOf(200));
 	}
 	
 	@PostMapping("/items")
 	public ResponseEntity<ResponseItemVO> createItems(@Valid @RequestBody CreateItemVO createItemVO, BindingResult bindingResult) {
-		// TODO 상품 등록 코드 작성.
-		return null;
+		// 상품 등록 코드 작성.
+		if(bindingResult.hasErrors()) {
+			throw new ItemException(bindingResult.getFieldErrors());
+		}
+		ResponseItemVO responseItem = this.itemService.createItems(createItemVO);
+		return new ResponseEntity<ResponseItemVO>(responseItem, HttpStatusCode.valueOf(201));
 	}
 
 }

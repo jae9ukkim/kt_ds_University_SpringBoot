@@ -17,13 +17,17 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<ResponseItemVO> fetchAllItems() {
-		// TODO 상품 조회 기능 코드 작성.
-		return null;
+		// 상품 조회 기능 코드 작성.
+		return this.itemDao.selectAllItems();
 	}
 
 	@Override
 	public ResponseItemVO createItems(CreateItemVO createItemVO) {
-		// TODO 상품 등록 기능 코드 작성.
+		// 상품 등록 기능 코드 작성.
+		int createCount = this.itemDao.insertItem(createItemVO);
+		if(createCount > 0) {
+			return this.itemDao.selectItemById(createItemVO.getItemId());
+		}
 		return null;
 	}
 
