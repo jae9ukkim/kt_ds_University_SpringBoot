@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.userservice.client.OrderServiceClient;
 import com.example.userservice.exceptions.UserException;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.RegistUserVO;
+import com.example.userservice.vo.ResponseOrderVO;
 import com.example.userservice.vo.ResponseUserVO;
 
+import feign.FeignException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -30,6 +33,8 @@ public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private OrderServiceClient orderServiceClient;
 
 	@PostMapping("/users")
 	public ResponseEntity<ResponseUserVO> createUser(@RequestBody @Valid RegistUserVO registUserVO,
@@ -66,6 +71,15 @@ public class UserController {
 		}
 		// 회원 정보 조회 코드 작성
 		ResponseUserVO responseUser = userService.fetchOneUser(userId);
+		
+		try {
+			List<ResponseOrderVO> orders = this.orderServiceClient.fetchAllOrders(userId);
+			logger.info("User Orders: {}", orders);
+			responseUser.setOrders(orders);
+		} catch (FeignException fe) {
+			logger.error(fe.getMessage(), fe);
+		}
+		
 		return new ResponseEntity<ResponseUserVO>(responseUser, HttpStatusCode.valueOf(200));
 	}
 

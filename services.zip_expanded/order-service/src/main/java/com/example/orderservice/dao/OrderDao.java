@@ -15,4 +15,6 @@ public interface OrderDao {
 	ResponseOrderVO selectOneOrderByOrderId(String orderId);
 	
 	List<ResponseOrderVO> selectAllOrdersByUserId(String userId);
+
+	int deleteOrder(String orderId);
 }

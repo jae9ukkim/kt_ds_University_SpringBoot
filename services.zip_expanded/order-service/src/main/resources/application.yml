@@ -2,24 +2,41 @@ server:
   port: 0
 
 spring:
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
   application:
     name: order-service
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@localhost:1521:XE
+    url: jdbc:oracle:thin:@oracle:1522:XE
     username: SHOP_ORDERS
     password: shopOrders1234
-
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
-    register-with-eureka: true
-    fetch-registry: true
-
+    
+resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 2s
+        cancel-running-future: false
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        #모니터링 중인 Request, Response가 50% 이상 실패하면 circuitbreaker를 오픈        
+        failure-rate-threshold: 50
+        # circuitbreaker open 유지시간 설정 (10000ms => 10s)
+        wait-duration-in-open-state: 10000
+        # circuitbreaker가 모니터링 할 request, response의 단위
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+    
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:com/example/orderservice/**/mapper/*Mapper.xml
   type-aliases-package: com.example.orderservice.vo
+
+logging:
+  level:
+    com.example.orderservice.client: DEBUG

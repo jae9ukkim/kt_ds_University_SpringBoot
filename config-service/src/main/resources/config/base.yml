@@ -1,0 +1,38 @@
+# config-service를 구독하는 *-serice에 전파할 공통 설정을 작성
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+    
+token:
+  secret: very-long-long-user-token-secret-202507101234
+
+spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - health
+        - beans
+        - refresh
+        - info    
+        - busrefresh
+        - circuitbreakers # circuit breaker의 상태 모니터링 (open, closed, half-open)
+        - circuitbreakerevents # circuit breaker의 sliding window 모니터링 결과 (실패, 성공 이력)
+        - metrics
+        - prometheus
+  # service별 metrics를 service 이름으로 그룹화하여 노출시키도록 함
+  metrics:
+    tags:
+      application: ${spring.application.name}

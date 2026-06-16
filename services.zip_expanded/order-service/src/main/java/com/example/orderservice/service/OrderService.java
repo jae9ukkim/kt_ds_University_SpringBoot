@@ -10,4 +10,6 @@ public interface OrderService {
 	ResponseOrderVO createNewOrder(RequestOrderVO requestOrderVO);
 	
 	List<ResponseOrderVO> fetchAllOrdersByUserId(String userId);
+	
+	int deleteOrder(String orderId);
 }

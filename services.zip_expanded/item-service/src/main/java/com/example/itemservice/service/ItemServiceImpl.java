@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.itemservice.dao.ItemDao;
 import com.example.itemservice.vo.CreateItemVO;
+import com.example.itemservice.vo.RequestUpdateItemVO;
 import com.example.itemservice.vo.ResponseItemVO;
 
 @Service
@@ -29,6 +30,17 @@ public class ItemServiceImpl implements ItemService {
 			return this.itemDao.selectItemById(createItemVO.getItemId());
 		}
 		return null;
+	}
+
+	@Override
+	public ResponseItemVO updateItemStock(RequestUpdateItemVO requestUpdateItemVO) {
+		ResponseItemVO remainItem = this.itemDao.selectItemByItemId(requestUpdateItemVO.getItemId());
+		if(remainItem.getStock() < requestUpdateItemVO.getStock()) {
+			return null;
+		}
+		this.itemDao.updateItemStock(requestUpdateItemVO);
+	    return this.itemDao.selectItemByItemId(requestUpdateItemVO.getItemId());
+
 	}
 
 

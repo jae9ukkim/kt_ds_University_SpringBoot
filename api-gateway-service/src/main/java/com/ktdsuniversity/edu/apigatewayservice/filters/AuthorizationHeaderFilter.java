@@ -5,9 +5,12 @@ import java.util.Map;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,8 +29,12 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
-	@Value("${token.secret}")
-	private String jwtSecret;
+	private static final Logger logger = LoggerFactory.getLogger(AuthorizationHeaderFilter.class);
+	
+//	@Value("${token.secret}")
+//	private String jwtSecret;
+	@Autowired
+	private Environment env;	
 
 	public AuthorizationHeaderFilter() {
 		super(Config.class); // Filter List에 등록
@@ -39,6 +46,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 	@Override
 	public GatewayFilter apply(Config config) {
 		return (exchange, chain) -> {
+			logger.info("Token Secret: {}", this.env.getProperty("token.secret"));
 			// Pre Filter
 			ServerHttpRequest request = exchange.getRequest();
 			if (!request.getHeaders().containsHeader(HttpHeaders.AUTHORIZATION)) {
@@ -70,7 +78,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 		
 		Map<String, String> tokenContent = null;
 		
-		SecretKey secretKey = Keys.hmacShaKeyFor(this.jwtSecret.getBytes());
+		SecretKey secretKey = Keys.hmacShaKeyFor(this.env.getProperty("token.secret").getBytes());
 		Claims claims = null;
 
 		try {

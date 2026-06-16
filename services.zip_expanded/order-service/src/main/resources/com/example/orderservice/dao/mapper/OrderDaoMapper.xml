@@ -56,4 +56,10 @@
 		     WHERE USER_ID = #{_parameter}
 	</select>
 		      
+    <delete id="deleteOrder" parameterType="string">
+        DELETE
+          FROM ORDERS
+         WHERE ORDER_ID = #{_parameter}
+    </delete>
+    
 </mapper>

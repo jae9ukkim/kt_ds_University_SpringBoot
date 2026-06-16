@@ -1,5 +1,7 @@
 package com.example.userservice.vo;
 
+import java.util.List;
+
 public class ResponseUserVO {
 
 	private String userId;
@@ -8,6 +10,8 @@ public class ResponseUserVO {
 	private String pwd;
 	private String salt;
 
+	List<ResponseOrderVO> orders;
+	
 	public String getUserId() {
 		return userId;
 	}
@@ -46,6 +50,14 @@ public class ResponseUserVO {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public List<ResponseOrderVO> getOrders() {
+		return this.orders;
+	}
+
+	public void setOrders(List<ResponseOrderVO> orders) {
+		this.orders = orders;
 	}
 
 }
